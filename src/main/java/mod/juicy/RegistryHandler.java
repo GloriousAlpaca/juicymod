@@ -4,9 +4,7 @@ import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.FlowingFluidBlock;
 import net.minecraft.block.material.Material;
-import net.minecraft.fluid.FlowingFluid;
 import net.minecraft.fluid.Fluid;
-import net.minecraft.fluid.Fluids;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvents;
@@ -20,7 +18,6 @@ import net.minecraftforge.registries.ForgeRegistries;
 import static mod.juicy.Juicymod.MODID;
 
 import java.awt.Color;
-import java.util.function.Supplier;
 
 import mod.juicy.fluid.FluidHolder;
 
