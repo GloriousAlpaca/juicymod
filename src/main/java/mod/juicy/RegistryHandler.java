@@ -38,15 +38,20 @@ public class RegistryHandler {
 	public static final ResourceLocation MOBJUICE_FLOWING_RL = new ResourceLocation(Juicymod.MODID,"blocks/mobjuice_flowing");
 	public static final ResourceLocation MOBJUICE_OVERLAY_RL = new ResourceLocation(Juicymod.MODID,"blocks/mobjuice_overlay");
 		
-	public static final ForgeFlowingFluid.Properties MOBJUICE_PROPERTIES = new ForgeFlowingFluid.Properties(()->FluidHolder.MOBJUICE_STILL, ()->FluidHolder.MOBJUICE_FLOWING, 
-			FluidAttributes.builder(MOBJUICE_STILL_RL, MOBJUICE_FLOWING_RL).color(Color.GREEN.getRGB()).density(5).viscosity(2).overlay(MOBJUICE_OVERLAY_RL).sound(SoundEvents.ENTITY_COD_FLOP));
+	public static final ForgeFlowingFluid.Properties MOBJUICE_PROPERTIES = new ForgeFlowingFluid.Properties(
+			()-> FluidHolder.MOBJUICE_STILL, 
+			()-> FluidHolder.MOBJUICE_FLOWING, 
+			FluidAttributes.builder(MOBJUICE_STILL_RL, MOBJUICE_FLOWING_RL).color(Color.GREEN.getRGB()).overlay(MOBJUICE_OVERLAY_RL).sound(SoundEvents.ENTITY_COD_FLOP));
 	
 	//Register Fluids
 	public static final RegistryObject<Fluid> MOBJUICE_STILL = FLUIDS.register("mobjuice_still",() -> new ForgeFlowingFluid.Source(MOBJUICE_PROPERTIES));
 	public static final RegistryObject<Fluid> MOBJUICE_FLOWING = FLUIDS.register("mobjuice_flowing",() -> new ForgeFlowingFluid.Flowing(MOBJUICE_PROPERTIES));
 	
 	//Register Blocks
-	public static final RegistryObject<Block> MOBJUICE_BLOCK = BLOCKS.register("mobjuice", () -> new FlowingFluidBlock(() -> FluidHolder.MOBJUICE_STILL, AbstractBlock.Properties.create(Material.WATER).doesNotBlockMovement().hardnessAndResistance(100.0F).noDrops()));
+	public static final RegistryObject<Block> MOBJUICE_BLOCK = BLOCKS.register("mobjuice", () -> new FlowingFluidBlock(
+			//Temporary Change to RegistryObject
+			()-> FluidHolder.MOBJUICE_STILL,
+			AbstractBlock.Properties.create(Material.WATER).doesNotBlockMovement().hardnessAndResistance(100.0F).noDrops()));
 	
 	public static void registerall(){
 		FLUIDS.register(FMLJavaModLoadingContext.get().getModEventBus());
