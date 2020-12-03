@@ -54,7 +54,7 @@ public class RegistryHandler {
 			//Temporary Change to RegistryObject
 			()-> FluidHolder.MOBJUICE_STILL,
 			AbstractBlock.Properties.create(Material.WATER).doesNotBlockMovement().hardnessAndResistance(100.0F).noDrops()));
-	public static final RegistryObject<Block> GUTTER_BLOCK = BLOCKS.register("juicegutter", () -> new GutterBlock());
+	public static final RegistryObject<Block> GUTTER_BLOCK = BLOCKS.register("juicegutter", GutterBlock::new);
 
 	//Register Tile Entities
 	
