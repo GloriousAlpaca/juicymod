@@ -6,6 +6,7 @@ import net.minecraft.block.FlowingFluidBlock;
 import net.minecraft.block.material.Material;
 import net.minecraft.fluid.Fluid;
 import net.minecraft.item.Item;
+import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.SoundEvents;
 import net.minecraftforge.fluids.FluidAttributes;
@@ -19,7 +20,10 @@ import static mod.juicy.Juicymod.MODID;
 
 import java.awt.Color;
 
+import mod.juicy.block.BlockHolder;
+import mod.juicy.block.GutterBlock;
 import mod.juicy.fluid.FluidHolder;
+import mod.juicy.util.ItemHelper;
 
 public class RegistryHandler {
 	
@@ -28,6 +32,7 @@ public class RegistryHandler {
     private static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ForgeRegistries.BLOCKS, MODID);
 	private static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, MODID);
 	private static final DeferredRegister<Fluid> FLUIDS = DeferredRegister.create(ForgeRegistries.FLUIDS, MODID);
+	private static final DeferredRegister<TileEntityType<?>> TILES = DeferredRegister.create(ForgeRegistries.TILE_ENTITIES, MODID);
 	
 	
 	//Mobjuice Data
@@ -49,6 +54,12 @@ public class RegistryHandler {
 			//Temporary Change to RegistryObject
 			()-> FluidHolder.MOBJUICE_STILL,
 			AbstractBlock.Properties.create(Material.WATER).doesNotBlockMovement().hardnessAndResistance(100.0F).noDrops()));
+	public static final RegistryObject<Block> GUTTER_BLOCK = BLOCKS.register("juicegutter", () -> new GutterBlock());
+
+	//Register Tile Entities
+	
+	//Register Items
+	public static final RegistryObject<Item> GUTTER_BLOCK_ITEM = ITEMS.register("juicegutter",() -> ItemHelper.ItemfromBlock(BlockHolder.GUTTER_BLOCK));
 	
 	public static void registerall(){
 		FLUIDS.register(FMLJavaModLoadingContext.get().getModEventBus());
