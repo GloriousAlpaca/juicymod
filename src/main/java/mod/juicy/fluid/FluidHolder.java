@@ -1,11 +1,11 @@
 package mod.juicy.fluid;
 
-import mod.juicy.Juicymod;
+import mod.juicy.Juicy;
 import net.minecraft.block.FlowingFluidBlock;
 import net.minecraftforge.fluids.ForgeFlowingFluid;
 import net.minecraftforge.registries.ObjectHolder;
 
-@ObjectHolder(Juicymod.MODID)
+@ObjectHolder(Juicy.MODID)
 public class FluidHolder {
 
 	

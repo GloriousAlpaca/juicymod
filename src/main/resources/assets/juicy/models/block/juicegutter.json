@@ -1,6 +1,22 @@
 {
-  "parent": "block/cube_all",
-  "textures": {
-    "all": "juicy:block/juicegutter"
-  }
+	"textures": {
+		"0": "juicy:block/gutter_bottom",
+		"1": "juicy:block/gutter_top",
+		"2": "juicy:block/gutter_side",
+		"particle": "juicy:block/gutter_side"
+	},
+	"elements": [
+		{
+			"from": [0, 0, 0],
+			"to": [16, 16, 16],
+			"faces": {
+				"north": {"uv": [0, 0, 16, 16], "texture": "#2"},
+				"east": {"uv": [0, 0, 16, 16], "texture": "#2"},
+				"south": {"uv": [0, 0, 16, 16], "texture": "#2"},
+				"west": {"uv": [0, 0, 16, 16], "texture": "#2"},
+				"up": {"uv": [0, 0, 16, 16], "texture": "#1"},
+				"down": {"uv": [0, 0, 16, 16], "texture": "#0"}
+			}
+		}
+	]
 }
