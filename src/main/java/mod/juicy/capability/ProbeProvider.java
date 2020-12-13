@@ -3,36 +3,35 @@ package mod.juicy.capability;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.LazyOptional;
 
 public class ProbeProvider implements ICapabilitySerializable<CompoundNBT>{
-	
-	@CapabilityInject(IBacteriaCapability.class)
-    public static final Capability<IBacteriaCapability> BACT_CAPABILITY = null;
-	
 	private IBacteriaCapability bacteria;
+	
+	public ProbeProvider() {
+		bacteria = new BacteriaCapability(30);
+	}
 	
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-		if(cap == BACT_CAPABILITY){
-			return (LazyOptional<T>) bacteria;
+		if(cap == BacteriaCapability.BACT_CAPABILITY){
+			return (LazyOptional<T>) LazyOptional.of(()->bacteria);
 		}
-		return null;
+		return LazyOptional.empty();
 	}
 
 	@Override
 	public CompoundNBT serializeNBT() {
 		CompoundNBT nbt = new CompoundNBT();
-		nbt.put("Bacteria",BACT_CAPABILITY.writeNBT(bacteria, null));
-		return null;
+		nbt.put("amount",BacteriaCapability.BACT_CAPABILITY.writeNBT(bacteria, null));
+		return nbt;
 	}
 
 	@Override
 	public void deserializeNBT(CompoundNBT nbt) {
-		BACT_CAPABILITY.readNBT(bacteria, null, ((CompoundNBT) nbt).get("Bacteria"));
+		BacteriaCapability.BACT_CAPABILITY.readNBT(bacteria, null, ((CompoundNBT) nbt).get("amount"));
 	}
 
 

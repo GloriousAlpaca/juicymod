@@ -1,21 +1,124 @@
 package mod.juicy.tile;
 
+import java.util.ArrayDeque;
+import java.util.Vector;
+
 import mod.juicy.Juicy;
-import net.minecraft.client.renderer.texture.ITickable;
-import net.minecraft.tileentity.ITickableTileEntity;
+import mod.juicy.block.TankBlock;
+import net.minecraft.block.BlockState;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Direction;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.vector.Vector3i;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
 
-public class TankTile extends TileEntity implements ITickableTileEntity{
-
+public class TankTile extends TileEntity{
+	private BlockPos controller;
+	static Vector3i[] neighbours = {new Vector3i(1, 0, 0), new Vector3i(-1, 0, 0), new Vector3i(0, 1, 0), new Vector3i(0, -1, 0), new Vector3i(0, 0, 1), new Vector3i(0, 0, -1)};
+	
 	public TankTile() {
 		super(TileHolder.TILE_TANK_TYPE);
-		Juicy.LOGGER.info("NEW TANK!");
 	}
-
+	
 	@Override
-	public void tick() {
-		
+	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
+		if(controller != null) {
+			Juicy.LOGGER.info("CONTROLLER NON NULL");
+		return this.getWorld().getTileEntity(controller).getCapability(cap, side);
+		}
+		else
+		return LazyOptional.empty();
 	}
-
-
+	
+	public void setController(BlockPos pPos) {
+		controller = pPos;
+		Juicy.LOGGER.info("SET CONTROLLER FOR BLOCK AT: "+pos);
+		Juicy.LOGGER.info("CONTROLLER IS AT: "+pPos);
+	}
+	
+	public BlockPos getController() {
+		return controller;
+	}
+	
+	public boolean hasController() {
+		return controller!=null;
+	}
+	
+	/*public TankControllerTile searchController(Vector<BlockPos> marked) {
+		if (!this.getWorld().isRemote()) {
+			// Does this block already have a controller?
+			if (controller != null)
+				return controller;
+			// Mark this block as read
+			marked.add(this.pos);
+			// Go through the neighbours
+			for (int i = 0; i < 6; i++) {
+				BlockPos cpos = this.pos.add(neighbours[i]);
+				// Is this neighbour part of the Tank?
+					if (world.getBlockState(cpos).getBlock() instanceof TankBlock && !marked.contains(cpos)) {
+						TileEntity current = world.getTileEntity(cpos);
+						// If the block is not a controller check the next block
+						if (current instanceof TankControllerTile) {
+							return (TankControllerTile) current;
+						} 
+						else{
+							//Juicy.LOGGER.info("OPENING: "+cpos.toString());
+							TankControllerTile cntrllr = ((TankTile) current).searchController(marked);
+							if(cntrllr !=null)
+							return cntrllr;
+						}
+					}
+			}
+		}
+		return null;
+	}*/
+	
+	public BlockPos searchController() {
+		Vector<BlockPos> marked = new Vector<BlockPos>();
+		ArrayDeque<BlockPos> queue = new ArrayDeque<BlockPos>();
+		queue.add(this.pos);
+		while (!queue.isEmpty()) {
+			BlockPos cPos = queue.getFirst();
+			for (int i = 0; i < 6; i++) {
+				BlockPos n = cPos.add(neighbours[i]);
+				if (!marked.contains(n))
+					if (this.getWorld().getBlockState(n).getBlock() instanceof TankBlock) {
+						TileEntity tile = this.getWorld().getTileEntity(n);
+						if (tile instanceof TankControllerTile) {
+							return tile.getPos();
+						} else if (tile instanceof TankTile && (((TankTile) tile).getController() != null)) {
+							return ((TankTile) tile).getController();
+						}
+						marked.add(n);
+						queue.add(n);
+					}
+			}
+			queue.pop();
+		}
+		return null;
+	}
+	
+	@Override
+	public void read(BlockState state, CompoundNBT nbt) {
+		super.read(state, nbt);
+		if (!this.getWorld().isRemote()) {
+			int[] controllerCoords = nbt.getIntArray("controller");
+			BlockPos cpos = new BlockPos(controllerCoords[0], controllerCoords[1], controllerCoords[2]);
+			setController(cpos);
+		}
+	}
+		
+	@Override
+	public CompoundNBT write(CompoundNBT compound) {
+		CompoundNBT nbt = super.write(compound);
+		if (!this.getWorld().isRemote()) {
+			if (controller != null) {
+				int[] controllerCoords = { controller.getX(), controller.getY(), controller.getZ() };
+				nbt.putIntArray("controller", controllerCoords);
+			}
+		}
+		return nbt;
+	}
 }

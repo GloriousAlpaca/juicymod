@@ -1,9 +1,19 @@
 package mod.juicy.capability;
 
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.CapabilityInject;
+
 public class BacteriaCapability implements IBacteriaCapability {
-	int bacteria;
+	@CapabilityInject(IBacteriaCapability.class)
+    public static final Capability<IBacteriaCapability> BACT_CAPABILITY = null;
+	
+	int bacteria=0;
 	int maxBacteria;
 
+	public BacteriaCapability(int pmaxBacteria) {
+		maxBacteria = pmaxBacteria;
+	}
+		
 	@Override
 	public int getBact() {
 		return bacteria;

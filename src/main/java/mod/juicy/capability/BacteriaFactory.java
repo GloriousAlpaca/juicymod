@@ -6,7 +6,7 @@ public class BacteriaFactory implements Callable<IBacteriaCapability> {
 
 	@Override
 	public IBacteriaCapability call() throws Exception {
-		return new BacteriaCapability();
+		return new BacteriaCapability(1000);
 	}
 
 }

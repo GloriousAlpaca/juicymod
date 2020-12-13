@@ -6,10 +6,13 @@ import net.minecraftforge.registries.ObjectHolder;
 @ObjectHolder("juicy")
 public class TileHolder {
 
-	@ObjectHolder ("fermentation_tank")
-    public static TileEntityType<TankTile> TILE_TANK_TYPE = null;
+	@ObjectHolder ("tank_controller")
+    public static TileEntityType<TankControllerTile> TILE_TANK_CONTROLLER_TYPE = null;
 	
-	@ObjectHolder ("juice_source")
-    public static TileEntityType<TankTile> TILE_SOURCE_TYPE = null;
+	@ObjectHolder ("tank")
+    public static TileEntityType<TankControllerTile> TILE_TANK_TYPE = null;
+	
+	@ObjectHolder ("gas_output")
+    public static TileEntityType<TankControllerTile> TILE_GAS_TYPE = null;
 	
 }

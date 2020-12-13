@@ -1,5 +1,19 @@
 package mod.juicy;
 
+import static mod.juicy.Juicy.MODID;
+
+import mod.juicy.block.BlockHolder;
+import mod.juicy.block.GasOutputBlock;
+import mod.juicy.block.GutterBlock;
+import mod.juicy.block.TankBlock;
+import mod.juicy.block.TankControllerBlock;
+import mod.juicy.fluid.FluidHolder;
+import mod.juicy.item.ItemHolder;
+import mod.juicy.item.ProbeItem;
+import mod.juicy.tile.GasTile;
+import mod.juicy.tile.TankControllerTile;
+import mod.juicy.tile.TankTile;
+import mod.juicy.util.ItemHelper;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.FlowingFluidBlock;
@@ -10,30 +24,12 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.ForgeFlowingFluid;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
-
-import static mod.juicy.Juicy.MODID;
-
-import java.awt.Color;
-import java.util.function.Supplier;
-
-import mod.juicy.block.BlockHolder;
-import mod.juicy.block.GutterBlock;
-import mod.juicy.block.TankBlock;
-import mod.juicy.capability.BacteriaFactory;
-import mod.juicy.capability.BacteriaStorage;
-import mod.juicy.capability.IBacteriaCapability;
-import mod.juicy.tile.TankTile;
-import mod.juicy.fluid.FluidHolder;
-import mod.juicy.item.ItemHolder;
-import mod.juicy.item.ProbeItem;
-import mod.juicy.util.ItemHelper;
 
 public class RegistryHandler {
 	
@@ -57,10 +53,14 @@ public class RegistryHandler {
 	//Register Blocks
 	public static final RegistryObject<Block> MOBJUICE_BLOCK = BLOCKS.register("mobjuice", () -> new FlowingFluidBlock(()-> FluidHolder.MOBJUICE_STILL, AbstractBlock.Properties.create(Material.WATER).doesNotBlockMovement().hardnessAndResistance(100.0F).noDrops()));
 	public static final RegistryObject<Block> GUTTER_BLOCK = BLOCKS.register("juicegutter", ()-> new GutterBlock());
-	public static final RegistryObject<Block> TANK_BLOCK = BLOCKS.register("fermentation_tank", ()-> new TankBlock());
-
+	public static final RegistryObject<Block> TANK_CONTROLLER_BLOCK = BLOCKS.register("tank_controller", ()-> new TankControllerBlock());
+	public static final RegistryObject<Block> TANK_BLOCK = BLOCKS.register("tank", ()-> new TankBlock());
+	public static final RegistryObject<Block> GAS_OUTPUT_BLOCK = BLOCKS.register("gas_output", ()-> new GasOutputBlock());
+	
 	//Register Tile Entity Types
-	public static final RegistryObject<TileEntityType<?>> TANK_TILE = TILES.register("fermentation_tank", () -> TileEntityType.Builder.create(() -> new TankTile(), BlockHolder.TANK_BLOCK).build(null).setRegistryName("fermentation_tank"));
+	public static final RegistryObject<TileEntityType<?>> TANK_CONTROLLER_TILE = TILES.register("tank_controller", () -> TileEntityType.Builder.create(() -> new TankControllerTile(), BlockHolder.TANK_CONTROLLER_BLOCK).build(null));
+	public static final RegistryObject<TileEntityType<?>> TANK_TILE = TILES.register("tank", () -> TileEntityType.Builder.create(() -> new TankTile(), BlockHolder.TANK_BLOCK).build(null));
+	public static final RegistryObject<TileEntityType<?>> GAS_TILE = TILES.register("gas_output", () -> TileEntityType.Builder.create(() -> new GasTile(), BlockHolder.GAS_OUTPUT_BLOCK).build(null));
 	
 	//Register Items
 	public static final RegistryObject<Item> PROBE_ITEM = ITEMS.register("probe",() -> new ProbeItem());
@@ -68,12 +68,16 @@ public class RegistryHandler {
 	
 	//Register Blockitems
 	public static final RegistryObject<Item> GUTTER_BLOCK_ITEM = ITEMS.register("juicegutter",() -> ItemHelper.ItemfromBlock(BlockHolder.GUTTER_BLOCK));
-	public static final RegistryObject<Item> TANK_BLOCK_ITEM = ITEMS.register("fermentation_tank",() -> ItemHelper.ItemfromBlock(BlockHolder.TANK_BLOCK));
+	public static final RegistryObject<Item> TANK_CONTROLLER_BLOCK_ITEM = ITEMS.register("tank_controller",() -> ItemHelper.ItemfromBlock(BlockHolder.TANK_CONTROLLER_BLOCK));
+	public static final RegistryObject<Item> TANK_BLOCK_ITEM = ITEMS.register("tank",() -> ItemHelper.ItemfromBlock(BlockHolder.TANK_BLOCK));
+	public static final RegistryObject<Item> GAS_OUTPUT_BLOCK_ITEM = ITEMS.register("gas_output",() -> ItemHelper.ItemfromBlock(BlockHolder.GAS_OUTPUT_BLOCK));
 	
 	public static void registerall(){
 		FLUIDS.register(FMLJavaModLoadingContext.get().getModEventBus());
 		BLOCKS.register(FMLJavaModLoadingContext.get().getModEventBus());
+		TILES.register(FMLJavaModLoadingContext.get().getModEventBus());
 		ITEMS.register(FMLJavaModLoadingContext.get().getModEventBus());
+		
 	}
 	
 	
