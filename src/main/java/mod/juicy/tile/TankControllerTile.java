@@ -19,19 +19,18 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
 
 public class TankControllerTile extends TileEntity implements ITickableTileEntity{
 	static Vector3i[] neighbours = {new Vector3i(1, 0, 0), new Vector3i(-1, 0, 0), new Vector3i(0, 1, 0), new Vector3i(0, -1, 0), new Vector3i(0, 0, 1), new Vector3i(0, 0, -1)};
 	Vector<BlockPos> multiBlock;
 	IBacteriaCapability bacteria;
-	IFluidHandler juice;
+	JuiceTank juice;
 	
 	public TankControllerTile() {
 		super(TileHolder.TILE_TANK_CONTROLLER_TYPE);
 		bacteria = new BacteriaCapability(Integer.MAX_VALUE);
-		juice = new JuiceTank(FluidAttributes.BUCKET_VOLUME*2);
+		juice = new JuiceTank(FluidAttributes.BUCKET_VOLUME*2, FluidAttributes.BUCKET_VOLUME);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -49,7 +48,11 @@ public class TankControllerTile extends TileEntity implements ITickableTileEntit
 	
 	@Override
 	public void tick() {
-		
+		if(juice.getFluidAmount()>0) {
+		juice.removeFluid(1);
+		juice.addGas(1);
+		}
+		Juicy.LOGGER.info("Gas Amount: "+juice.getFluidInTank(2));
 	}
 	
 	public Vector<BlockPos> setMultiBlock(Vector<BlockPos> tankPos){
@@ -76,7 +79,7 @@ public class TankControllerTile extends TileEntity implements ITickableTileEntit
 	}
 	
 	public void updateCapacity() {
-		((FluidTank) juice).setCapacity(this.getCapacity()*FluidAttributes.BUCKET_VOLUME+FluidAttributes.BUCKET_VOLUME);
+		juice.setCapacity(this.getCapacity()*FluidAttributes.BUCKET_VOLUME+FluidAttributes.BUCKET_VOLUME);
 	}
 	
 	public Vector<BlockPos> searchMultiBlock(){
@@ -103,7 +106,11 @@ public class TankControllerTile extends TileEntity implements ITickableTileEntit
 	 * @param tanks Blockpos of the tankblocks
 	 */
 	public void announceController(Vector<BlockPos> tanks) {
-		tanks.remove(this.pos);
+		//TODO Remove Crash: NullPointerException
+		tanks.forEach(cpos->{
+			if(this.getWorld().getTileEntity(cpos) instanceof TankControllerTile)
+				tanks.remove(cpos);
+		});
 		tanks.forEach(tank -> ((TankTile) world.getTileEntity(tank)).setController(this.getPos()));
 	}
 	
@@ -111,11 +118,14 @@ public class TankControllerTile extends TileEntity implements ITickableTileEntit
 	public void read(BlockState state, CompoundNBT nbt)
 	{
 		super.read(state, nbt);
+		nbt.getInt("juice");
 	}
 		
 	@Override
 	public CompoundNBT write(CompoundNBT compound) {
 		CompoundNBT nbt = super.write(compound);
+		nbt.putInt("juice", this.juice.getFluidInTank(1).getAmount());
+		nbt.putInt("gas", this.juice.getFluidInTank(2).getAmount());
 		return nbt;
 	}
 	

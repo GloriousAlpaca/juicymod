@@ -16,7 +16,4 @@ public class BlockHolder {
 	@ObjectHolder("tank")
 	public static final Block TANK_BLOCK = null;
 	
-	@ObjectHolder("gas_output")
-	public static final Block GAS_OUTPUT_BLOCK = null;
-	
 }

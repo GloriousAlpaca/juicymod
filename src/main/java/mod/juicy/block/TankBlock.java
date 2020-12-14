@@ -3,6 +3,7 @@ package mod.juicy.block;
 import javax.annotation.Nullable;
 
 import mod.juicy.capability.BacteriaCapability;
+import mod.juicy.capability.IBacteriaCapability;
 import mod.juicy.tile.TankControllerTile;
 import mod.juicy.tile.TankTile;
 import net.minecraft.block.AbstractBlock;
@@ -19,6 +20,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidUtil;
 
 public class TankBlock extends Block{
@@ -53,22 +55,28 @@ public class TankBlock extends Block{
 			{
 			tile.setController(controllerTile);
 			tile.markDirty();
-			((TankControllerTile) worldIn.getTileEntity(tile.getController())).addtoMultiBlock(pos);
+			TankControllerTile controller = ((TankControllerTile) worldIn.getTileEntity(tile.getController()));
+			controller.addtoMultiBlock(pos);
+			controller.updateCapacity();
 			}
 		}
 	}
 
 	@Override
 	public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+		//TODO Fix Bucket Interaction
 		if(!worldIn.isRemote)
 		if(FluidUtil.interactWithFluidHandler(player, handIn, worldIn, hit.getPos(), hit.getFace()))
 			return ActionResultType.SUCCESS;
 		else if(player.getActiveItemStack().getCapability(BacteriaCapability.BACT_CAPABILITY).isPresent()){
+			LazyOptional<IBacteriaCapability> bacttile = worldIn.getTileEntity(pos).getCapability(BacteriaCapability.BACT_CAPABILITY);
+			bacttile.ifPresent(cap-> cap.receiveBact(player.getActiveItemStack().getCapability(BacteriaCapability.BACT_CAPABILITY).orElseThrow(()->new NullPointerException()).getBact(), true));
 			return ActionResultType.SUCCESS;
 		}
 		else {
 			return ActionResultType.FAIL;
 		}
-			return ActionResultType.PASS;
+		else
+			return ActionResultType.SUCCESS;
     }
 }
