@@ -25,13 +25,13 @@ public class ProbeProvider implements ICapabilitySerializable<CompoundNBT>{
 	@Override
 	public CompoundNBT serializeNBT() {
 		CompoundNBT nbt = new CompoundNBT();
-		nbt.put("amount",BacteriaCapability.BACT_CAPABILITY.writeNBT(bacteria, null));
+		nbt.put("bacteria",BacteriaCapability.BACT_CAPABILITY.writeNBT(bacteria, null));
 		return nbt;
 	}
 
 	@Override
 	public void deserializeNBT(CompoundNBT nbt) {
-		BacteriaCapability.BACT_CAPABILITY.readNBT(bacteria, null, ((CompoundNBT) nbt).get("amount"));
+		BacteriaCapability.BACT_CAPABILITY.readNBT(bacteria, null, ((CompoundNBT) nbt).get("bacteria"));
 	}
 
 

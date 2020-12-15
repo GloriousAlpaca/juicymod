@@ -5,6 +5,7 @@ import java.util.List;
 import javax.annotation.Nullable;
 
 import mod.juicy.Juicy;
+import mod.juicy.capability.BacteriaCapability;
 import mod.juicy.capability.IBacteriaCapability;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.util.ITooltipFlag;
@@ -12,6 +13,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUseContext;
+import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
@@ -22,9 +24,6 @@ import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.util.LazyOptional;
 
 public class ProbeItem extends Item{
-
-	@CapabilityInject(IBacteriaCapability.class)
-    public static final Capability<IBacteriaCapability> BACT_CAPABILITY = null;
 	
 	public ProbeItem() {
 		super(new Properties().maxStackSize(1).group(Juicy.itemGroup));
@@ -37,9 +36,11 @@ public class ProbeItem extends Item{
 		if(!context.getWorld().isRemote())
 		{
 			if(context.getWorld().getBlockState(context.getPos()).getBlock().getRegistryName().toString().contains("kelp")) {
-				IBacteriaCapability capability = context.getItem().getCapability(BACT_CAPABILITY, null).orElse(null);
-				capability.receiveBact(5, false);
-				Juicy.LOGGER.info("Bacteria: " + capability.getBact());
+				LazyOptional<IBacteriaCapability> capability = context.getItem().getCapability(BacteriaCapability.BACT_CAPABILITY, null);
+				capability.ifPresent(cap->{
+					cap.receiveBact(Math.round(Math.random()*5), false);
+					Juicy.LOGGER.info("Bacteria: " + cap.getBact());
+				});
 				return ActionResultType.SUCCESS;
 			}
 
@@ -57,8 +58,28 @@ public class ProbeItem extends Item{
 	@Override
 	public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
 		//TODO Fix Client Sync
-		LazyOptional<IBacteriaCapability> cap = stack.getCapability(BACT_CAPABILITY);
-		cap.ifPresent(cap1 -> tooltip.add(new StringTextComponent("Bacteria: "+cap1.getBact())));
+		LazyOptional<IBacteriaCapability> cap = stack.getCapability(BacteriaCapability.BACT_CAPABILITY);
+		cap.ifPresent(cap1 -> tooltip.add(new StringTextComponent("Bacteria: "+Math.round(cap1.getBact()))));
+	}
+	
+	
+	@Override
+	public boolean shouldSyncTag() {
+		return true;
+	}
+	
+	@Override
+	public CompoundNBT getShareTag(ItemStack stack) {
+		// TODO Auto-generated method stub
+		CompoundNBT nbt = super.getShareTag(stack);
+		stack.getCapability(BacteriaCapability.BACT_CAPABILITY).ifPresent(cap->nbt.put("bacteria",BacteriaCapability.BACT_CAPABILITY.writeNBT(cap, null)));
+		return nbt;
+	}
+	
+	@Override
+	public void readShareTag(ItemStack stack, CompoundNBT nbt) {
+		super.readShareTag(stack, nbt);
+		stack.getCapability(BacteriaCapability.BACT_CAPABILITY).ifPresent(cap->BacteriaCapability.BACT_CAPABILITY.readNBT(cap, null, nbt.get("bacteria")));
 	}
 	
 }

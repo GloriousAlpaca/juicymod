@@ -1,5 +1,5 @@
 package mod.juicy.network;
 
-public class juicyPacketHandler {
+public class JuicyPacketHandler {
 
 }

@@ -1,27 +1,41 @@
 package mod.juicy.capability;
 
+import net.minecraft.nbt.CompoundNBT;
+
 public interface IBacteriaCapability {
 
 		/**
-		 * Get the Amount of Bacteria.
-		 * @return Current Amount of Bacteria
+		 * Get the Amount of bacteria.
+		 * @return Current Amount of bacteria
 		 */
-		public int getBact();
+		public double getBact();
 	  
+		/**
+		 * Get the Limit at which bacteria start to die.
+		 * @return Current bacteria limit
+		 */
+		public int getLimit();
+		
 		/**
 		 * Set the Amount of Bacteria
 		 * @param value Amount of Bacteria
 		 * @return The actual Amount of Bacteria
 		 */
-		public int setBact(int value);
+		public double setBact(double value);
 	  
+		/**
+		 * Set the limit at which bacteria start to die.
+		 * @param value Amount of Bacteria
+		 */
+		public void setLimit(int value);
+		
 		/**
 		 * Add Bacteria to the Object
 		 * @param maxReceive The maximal Amount added
 		 * @param simulate Only simulate adding the bacteria?
 		 * @return The actual Amount added
 		 */
-		public int receiveBact(int maxReceive, boolean simulate);
+		public double receiveBact(double maxReceive, boolean simulate);
 	  
 		/**
 		 * Extract Bacteria from the Object
@@ -29,6 +43,10 @@ public interface IBacteriaCapability {
 		 * @param simulate Is the extraction only simulated
 		 * @return The actual amount extracted
 		 */
-		public int extractBact(int maxExtract, boolean simulate);
+		public double extractBact(double maxExtract, boolean simulate);
 	  
+		public IBacteriaCapability readFromNBT(CompoundNBT nbt);
+		
+		public CompoundNBT writeToNBT(CompoundNBT nbt);
+		
 }

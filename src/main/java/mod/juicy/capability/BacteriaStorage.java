@@ -10,13 +10,13 @@ public class BacteriaStorage implements Capability.IStorage<IBacteriaCapability>
 	@Override
 	public INBT writeNBT(Capability<IBacteriaCapability> capability, IBacteriaCapability instance, Direction side) {
 		CompoundNBT nbt = new CompoundNBT();
-		nbt.putInt("amount", 	instance.getBact());
+		instance.writeToNBT(nbt);
 		return nbt;
 	}
 
 	@Override
 	public void readNBT(Capability<IBacteriaCapability> capability, IBacteriaCapability instance, Direction side, INBT nbt) {
-		instance.setBact(((CompoundNBT) nbt).getInt("amount"));
+		instance.readFromNBT((CompoundNBT) nbt);
 	}
 
 }
