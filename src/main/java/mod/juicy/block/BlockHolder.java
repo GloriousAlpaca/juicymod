@@ -16,4 +16,12 @@ public class BlockHolder {
 	@ObjectHolder("tank")
 	public static final Block TANK_BLOCK = null;
 	
+	@ObjectHolder("thermostat")
+	public static final Block THERM_BLOCK = null;
+	
+	@ObjectHolder("valve")
+	public static final Block VALVE_BLOCK = null;
+	
+	@ObjectHolder("generator")
+	public static final Block GENERATOR_BLOCK = null;
 }

@@ -2,9 +2,11 @@ package mod.juicy.block;
 
 import javax.annotation.Nullable;
 
+import mod.juicy.Juicy;
 import mod.juicy.capability.BacteriaCapability;
 import mod.juicy.capability.IBacteriaCapability;
 import mod.juicy.tile.TankControllerTile;
+import mod.juicy.tile.TankSlaveTile;
 import mod.juicy.tile.TankTile;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
@@ -19,6 +21,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.world.IBlockReader;
+import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidUtil;
@@ -49,7 +52,7 @@ public class TankBlock extends Block{
 	{
 		if(!worldIn.isRemote())
 		{
-			TankTile tile = (TankTile) worldIn.getTileEntity(pos);
+			TankSlaveTile tile = (TankSlaveTile) worldIn.getTileEntity(pos);
 			BlockPos controllerTile = tile.searchController();
 			if(controllerTile != null)
 			{
@@ -61,7 +64,21 @@ public class TankBlock extends Block{
 			}
 		}
 	}
-
+	
+	/*@Override
+	public void onBlockHarvested(World worldIn, BlockPos pos, BlockState state, PlayerEntity player) {
+		super.onBlockHarvested(worldIn, pos, state, player);
+		TileEntity tile = worldIn.getTileEntity(pos);
+		if(tile != null) {
+			if(tile instanceof TankControllerTile) {
+				((TankControllerTile) tile).renounceController();
+			}
+			else {
+				((TankControllerTile) worldIn.getTileEntity(((TankSlaveTile) tile).getController())).removeFromMultiBlock(pos);
+			}
+		}
+	}*/
+	
 	@Override
 	public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
 		//TODO Fix Bucket Interaction
@@ -79,4 +96,6 @@ public class TankBlock extends Block{
 		else
 			return ActionResultType.SUCCESS;
     }
+	
+	
 }

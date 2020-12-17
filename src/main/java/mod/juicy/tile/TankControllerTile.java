@@ -68,23 +68,11 @@ public class TankControllerTile extends TileEntity implements ITickableTileEntit
 		return multiBlock;
 	}
 
-	/**
-	 * Checks the multiBlock Vector for tank occurrences Call this Method sparingly!
-	 * 
-	 * @return How many Tanks are in the multiBlock vector
-	 */
-	public int getCapacity() {
-		int capacity = 0;
-		for (int i = 0; i < multiBlock.size(); i++) {
-			capacity += this.getWorld().getTileEntity(multiBlock.get(i)) instanceof TankTile ? 1 : 0;
-		}
-		return capacity;
+	public Vector<BlockPos> removeFromMultiBlock(BlockPos tankPos) {
+		multiBlock.remove(tankPos);
+		return multiBlock;
 	}
-
-	public void updateCapacity() {
-		juice.setCapacity(this.getCapacity() * FluidAttributes.BUCKET_VOLUME + FluidAttributes.BUCKET_VOLUME);
-	}
-
+	
 	public Vector<BlockPos> searchMultiBlock() {
 		Vector<BlockPos> marked = new Vector<BlockPos>();
 		ArrayDeque<BlockPos> queue = new ArrayDeque<BlockPos>();
@@ -103,6 +91,28 @@ public class TankControllerTile extends TileEntity implements ITickableTileEntit
 		}
 		return marked;
 	}
+	
+	/**
+	 * Checks the multiBlock Vector for tank occurrences Call this Method sparingly!
+	 * 
+	 * @return How many Tanks are in the multiBlock vector
+	 */
+	public int getCapacity() {
+		int capacity = 0;
+		for (int i = 0; i < multiBlock.size(); i++) {
+			capacity += this.getWorld().getTileEntity(multiBlock.get(i)) instanceof TankTile ? 1 : 0;
+		}
+		return capacity;
+	}
+
+	public void updateCapacity() {
+		juice.setCapacity(this.getCapacity() * FluidAttributes.BUCKET_VOLUME + FluidAttributes.BUCKET_VOLUME);
+		Juicy.LOGGER.info("CAPACITY: "+juice.getCapacity());
+	}
+
+	public void setTemperature(double pTemp) {
+		this.temperature = pTemp;
+	}
 
 	/**
 	 * Sets this as the controller for the TankTiles at the BlockPos of the Vector.
@@ -110,14 +120,30 @@ public class TankControllerTile extends TileEntity implements ITickableTileEntit
 	 * @param tanks Blockpos of the tankblocks
 	 */
 	public void announceController(Vector<BlockPos> tanks) {
-		// TODO Remove Crash: NullPointerException
-		tanks.forEach(cpos -> {
-			if (this.getWorld().getTileEntity(cpos) instanceof TankControllerTile)
-				tanks.remove(cpos);
+		//TODO FIX NULLPOINTER
+		tanks.forEach(tankpos ->{
+			TileEntity tile = this.getWorld().getTileEntity(tankpos);
+			if(tile != null)
+			if(tile instanceof TankSlaveTile)
+				((TankSlaveTile) tile).setController(this.getPos());
 		});
-		tanks.forEach(tank -> ((TankTile) world.getTileEntity(tank)).setController(this.getPos()));
 	}
 
+	/**
+	 * Sets null as the controller for the TankTiles at the BlockPos of the Vector.
+	 * 
+	 * @param tanks Blockpos of the tankblocks
+	 */
+	public void renounceController() {
+		//TODO FIX NULLPOINTER
+		multiBlock.forEach(tankpos ->{
+			TileEntity tile = this.getWorld().getTileEntity(tankpos);
+			if(tile != null)
+			if(tile instanceof TankSlaveTile)
+				((TankSlaveTile) tile).setController(null);
+		});
+	}
+	
 	@Override
 	public void read(BlockState state, CompoundNBT nbt) {
 		super.read(state, nbt);

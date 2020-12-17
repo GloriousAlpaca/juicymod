@@ -1,6 +1,5 @@
 package mod.juicy.capability;
 
-import mod.juicy.Juicy;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
@@ -33,7 +32,6 @@ public class BacteriaCapability implements IBacteriaCapability {
 			dbacteria = 0;
 			death = 0;
 		}
-
 		return (int) Math.round(dbacteria);
 	}
 	
@@ -44,7 +42,6 @@ public class BacteriaCapability implements IBacteriaCapability {
 
 	@Override
 	public int getLimit() {
-		// TODO Auto-generated method stub
 		return limitBacteria;
 	}
 	
@@ -94,7 +91,6 @@ public class BacteriaCapability implements IBacteriaCapability {
 	@Override
 	public CompoundNBT writeToNBT(CompoundNBT nbt) {
 		nbt.putDouble("amount", bacteria);
-		Juicy.LOGGER.info("WRITE NBT: "+ bacteria);
 		nbt.putInt("limit", limitBacteria);
 		return nbt;
 	}
