@@ -15,7 +15,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 @OnlyIn(Dist.CLIENT)
 public class TankScreen extends ContainerScreen<TankContainer>{
 	private static final ResourceLocation BACKGROUND_TEXTURE = new ResourceLocation(Juicy.MODID, "textures/gui/tank_gui.png");
-	private TankControllerTile tile = null;
 
 	public TankScreen(TankContainer screenContainer, PlayerInventory inv, ITextComponent titleIn) {
 		super(screenContainer, inv, titleIn);
@@ -23,9 +22,6 @@ public class TankScreen extends ContainerScreen<TankContainer>{
 		this.guiTop = 0;
 		this.xSize = 176;
 		this.ySize = 166;
-		
-		this.tile = container.tile;
-		
 	}
 	
 	@Override
@@ -43,7 +39,6 @@ public class TankScreen extends ContainerScreen<TankContainer>{
 
 	@Override
 	protected void drawGuiContainerBackgroundLayer(MatrixStack matrixStack, float partialTicks, int mouseX, int mouseY) {
-		// TODO Auto-generated method stub
 		this.minecraft.getTextureManager().bindTexture(BACKGROUND_TEXTURE);
 		int x = (this.width - this.xSize) / 2;
 		int y = (this.height - this.ySize) / 2;

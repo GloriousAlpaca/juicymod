@@ -21,7 +21,7 @@ public class ValveBlock extends TankBlock{
 	
 	@Override
 	public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-		//TODO Fix Bucket Interaction
+		//TODO Add Valve Gui
 		return ActionResultType.PASS;
     }
 	

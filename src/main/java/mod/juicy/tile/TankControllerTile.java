@@ -37,13 +37,12 @@ public class TankControllerTile extends TileEntity implements ITickableTileEntit
 	@SuppressWarnings("unchecked")
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-		Juicy.LOGGER.info("CONTROLLER CAPABILITY");
 		if (cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
 			return (LazyOptional<T>) LazyOptional.of(() -> juice);
 		} else if (cap == BacteriaCapability.BACT_CAPABILITY) {
 			return (LazyOptional<T>) LazyOptional.of(() -> bacteria);
 		}
-		return LazyOptional.empty();
+		return super.getCapability(cap, side);
 	}
 
 	@Override

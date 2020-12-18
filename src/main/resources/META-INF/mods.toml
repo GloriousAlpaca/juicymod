@@ -22,8 +22,6 @@ modId="juicy" #mandatory
 version="${file.jarVersion}" #mandatory
  # A display name for the mod
 displayName="Juicy" #mandatory
-# A URL to query for updates for this mod. See the JSON update specification <here>
-updateJSONURL="http://myurl.me/" #optional
 # A URL for the "homepage" for this mod, displayed in the mod UI
 displayURL="" #optional
 # A file name (in the root of the mod JAR) containing a logo for display

@@ -22,7 +22,7 @@ public class ThermBlock extends TankBlock{
 	
 	@Override
 	public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-		//TODO Fix Bucket Interaction
+		//TODO Add Thermostat Gui
 		return ActionResultType.PASS;
     }
 }

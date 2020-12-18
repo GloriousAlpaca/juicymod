@@ -33,7 +33,7 @@ public class TankSlaveTile extends TileEntity {
 			Juicy.LOGGER.info("CONTROLLER NON NULL");
 			return this.getWorld().getTileEntity(controller).getCapability(cap, side);
 		} else
-			return LazyOptional.empty();
+			return super.getCapability(cap, side);
 	}
 
 	public void setController(BlockPos pPos) {

@@ -35,7 +35,7 @@ public class GeneratorTile extends TileEntity implements ITickableTileEntity{
 		else if(cap == CapabilityEnergy.ENERGY) {
 			return (LazyOptional<T>) LazyOptional.of(() -> energy);
 		}
-		return LazyOptional.empty();
+		return super.getCapability(cap, side);
 	}
 
 

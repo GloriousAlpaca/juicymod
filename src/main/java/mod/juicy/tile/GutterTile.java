@@ -26,7 +26,7 @@ public class GutterTile extends TileEntity{
 		if (cap == CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY) {
 			return (LazyOptional<T>) LazyOptional.of(() -> juice);
 		}
-		return LazyOptional.empty();
+		return super.getCapability(cap, side);
 	}
 	
 	public void addJuice(int max) {

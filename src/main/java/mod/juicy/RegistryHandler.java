@@ -9,6 +9,7 @@ import mod.juicy.block.TankBlock;
 import mod.juicy.block.TankControllerBlock;
 import mod.juicy.block.ThermBlock;
 import mod.juicy.block.ValveBlock;
+import mod.juicy.container.TankContainer;
 import mod.juicy.fluid.FluidHolder;
 import mod.juicy.item.ItemHolder;
 import mod.juicy.item.ProbeItem;
@@ -24,17 +25,21 @@ import net.minecraft.block.Block;
 import net.minecraft.block.FlowingFluidBlock;
 import net.minecraft.block.material.Material;
 import net.minecraft.fluid.Fluid;
+import net.minecraft.inventory.container.ContainerType;
 import net.minecraft.item.BucketItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.ForgeFlowingFluid;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.common.extensions.IForgeContainerType;
 
 public class RegistryHandler {
 	
@@ -44,6 +49,7 @@ public class RegistryHandler {
 	private static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, MODID);
 	private static final DeferredRegister<Fluid> FLUIDS = DeferredRegister.create(ForgeRegistries.FLUIDS, MODID);
 	private static final DeferredRegister<TileEntityType<?>> TILES = DeferredRegister.create(ForgeRegistries.TILE_ENTITIES, MODID);
+	private static final DeferredRegister<ContainerType<?>> CONTAINERS = DeferredRegister.create(ForgeRegistries.CONTAINERS, MODID);
 	
 	//Mobjuice Data
 	public static final ResourceLocation MOBJUICE_STILL_RL = new ResourceLocation(Juicy.MODID,"block/mobjuice_still");
@@ -79,6 +85,13 @@ public class RegistryHandler {
 	public static final RegistryObject<TileEntityType<?>> VALVE_TILE = TILES.register("valve", () -> TileEntityType.Builder.create(() -> new ValveTile(), BlockHolder.VALVE_BLOCK).build(null));
 	public static final RegistryObject<TileEntityType<?>> GENERATOR_TILE = TILES.register("generator", () -> TileEntityType.Builder.create(() -> new GeneratorTile(), BlockHolder.GENERATOR_BLOCK).build(null));
 	
+	//Register ContainerTypes
+    public static final RegistryObject<ContainerType<TankContainer>> TANK_CONTAINER = CONTAINERS.register("tank", () -> IForgeContainerType.create((windowId, inv, data) -> {
+        BlockPos pos = data.readBlockPos();
+        World world = inv.player.getEntityWorld();
+        return new TankContainer(windowId, world, pos, inv, inv.player);
+    }));
+	
 	//Register Items
 	public static final RegistryObject<Item> PROBE_ITEM = ITEMS.register("probe",() -> new ProbeItem());
 	public static final RegistryObject<Item> JUICE_BUCKET_ITEM = ITEMS.register("juice_bucket",() -> new BucketItem(()-> FluidHolder.MOBJUICE_STILL, new Item.Properties().group(ItemGroup.MISC)));
@@ -94,8 +107,9 @@ public class RegistryHandler {
 	public static void registerall(){
 		FLUIDS.register(FMLJavaModLoadingContext.get().getModEventBus());
 		BLOCKS.register(FMLJavaModLoadingContext.get().getModEventBus());
-		TILES.register(FMLJavaModLoadingContext.get().getModEventBus());
 		ITEMS.register(FMLJavaModLoadingContext.get().getModEventBus());
+		TILES.register(FMLJavaModLoadingContext.get().getModEventBus());
+		CONTAINERS.register(FMLJavaModLoadingContext.get().getModEventBus());
 		
 	}
 	
