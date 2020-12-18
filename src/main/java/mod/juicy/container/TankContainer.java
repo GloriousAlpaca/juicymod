@@ -25,7 +25,6 @@ public class TankContainer extends Container{
 		if(tileEntity != null)
 		if(tileEntity instanceof TankSlaveTile) {
 			tile = (TankControllerTile) world.getTileEntity(((TankSlaveTile) tileEntity).getController());
-			//TILE COULD STILL BE NULL!!
 		}
 		else if(tileEntity instanceof TankControllerTile) {
 			tile = (TankControllerTile) tileEntity;

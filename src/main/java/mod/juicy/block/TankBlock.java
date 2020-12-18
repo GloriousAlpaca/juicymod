@@ -2,7 +2,6 @@ package mod.juicy.block;
 
 import javax.annotation.Nullable;
 
-import mod.juicy.Juicy;
 import mod.juicy.capability.BacteriaCapability;
 import mod.juicy.capability.IBacteriaCapability;
 import mod.juicy.container.TankContainer;
@@ -29,7 +28,6 @@ import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidUtil;
