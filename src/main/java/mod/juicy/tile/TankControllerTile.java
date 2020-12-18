@@ -114,6 +114,10 @@ public class TankControllerTile extends TileEntity implements ITickableTileEntit
 		this.temperature = pTemp;
 	}
 
+	public void setFlow(int pFlow) {
+		juice.setIntake(pFlow);
+	}
+	
 	/**
 	 * Sets this as the controller for the TankTiles at the BlockPos of the Vector.
 	 * 

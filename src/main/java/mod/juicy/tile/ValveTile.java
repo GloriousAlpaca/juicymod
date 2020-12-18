@@ -24,10 +24,10 @@ public class ValveTile extends TankSlaveTile{
 		}
 	}
 
-	public void setFlow(double pFlow) {
+	public void setFlow(int pFlow) {
 		if (this.hasController()) {
 			TankControllerTile tile = (TankControllerTile) this.getWorld().getTileEntity(controller);
-			
+			tile.setFlow(pFlow);
 		}
 	}
 	
