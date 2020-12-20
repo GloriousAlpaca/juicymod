@@ -1,5 +1,6 @@
 package mod.juicy.tile;
 
+import mod.juicy.Config;
 import mod.juicy.Juicy;
 import mod.juicy.fluid.FluidHolder;
 import net.minecraft.tileentity.TileEntity;
@@ -17,7 +18,7 @@ public class GutterTile extends TileEntity{
 	
 	public GutterTile() {
 		super(TileHolder.TILE_GUTTER_TYPE);
-		juice = new FluidTank(FluidAttributes.BUCKET_VOLUME, (fstack) -> fstack.getFluid().isEquivalentTo(FluidHolder.MOBJUICE_STILL));
+		juice = new FluidTank(Config.GUTTER_JUICECAP.get(), (fstack) -> fstack.getFluid().isEquivalentTo(FluidHolder.MOBJUICE_STILL));
 	}
 
 	@SuppressWarnings("unchecked")
@@ -31,7 +32,6 @@ public class GutterTile extends TileEntity{
 	
 	public void addJuice(int max) {
 		juice.fill(new FluidStack(FluidHolder.MOBJUICE_STILL, (int) Math.round(Math.random()*max)), FluidAction.EXECUTE);
-		Juicy.LOGGER.info("FILLED GUTTERBLOCK: "+juice.getFluidAmount());
 	}
 	
 }

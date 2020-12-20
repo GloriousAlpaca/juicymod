@@ -33,8 +33,7 @@ public class EventHandler {
 			Juicy.LOGGER.info("Current Position: "+cPos);
 			if(worldIn.getBlockState(cPos).getBlock() instanceof GutterBlock) {
 				if(worldIn.getTileEntity(cPos) != null)
-					//TODO Add Config
-					((GutterTile) worldIn.getTileEntity(cPos)).addJuice(100);
+					((GutterTile) worldIn.getTileEntity(cPos)).addJuice(Config.GUTTER_MAXJPERMOB.get());
 			}
 		}
 		

@@ -59,7 +59,7 @@ public class ProbeItem extends Item{
 	@Override
 	public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
 		//TODO Fix Client Sync
-		LazyOptional<IBacteriaCapability> cap = stack.getCapability(BacteriaCapability.BACT_CAPABILITY);
+		LazyOptional<IBacteriaCapability> cap = stack.getCapability(BacteriaCapability.BACT_CAPABILITY, null);
 		cap.ifPresent(cap1 -> tooltip.add(new TranslationTextComponent("information.probeitem", Long.toString(Math.round(cap1.getBact())))));
 	}
 	
@@ -72,14 +72,14 @@ public class ProbeItem extends Item{
 	@Override
 	public CompoundNBT getShareTag(ItemStack stack) {
 		CompoundNBT nbt = super.getShareTag(stack);
-		stack.getCapability(BacteriaCapability.BACT_CAPABILITY).ifPresent(cap->nbt.put("bacteria",BacteriaCapability.BACT_CAPABILITY.writeNBT(cap, null)));
+		stack.getCapability(BacteriaCapability.BACT_CAPABILITY, null).ifPresent(cap->nbt.put("bacteria", BacteriaCapability.BACT_CAPABILITY.writeNBT(cap, null)));
 		return nbt;
 	}
 	
 	@Override
 	public void readShareTag(ItemStack stack, CompoundNBT nbt) {
 		super.readShareTag(stack, nbt);
-		stack.getCapability(BacteriaCapability.BACT_CAPABILITY).ifPresent(cap->BacteriaCapability.BACT_CAPABILITY.readNBT(cap, null, nbt.get("bacteria")));
+		stack.getCapability(BacteriaCapability.BACT_CAPABILITY, null).ifPresent(cap->BacteriaCapability.BACT_CAPABILITY.readNBT(cap, null, nbt.get("bacteria")));
 	}
 	
 }

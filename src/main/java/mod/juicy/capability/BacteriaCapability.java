@@ -1,12 +1,15 @@
 package mod.juicy.capability;
 
+import mod.juicy.Config;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityInject;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 
 public class BacteriaCapability implements IBacteriaCapability {
-	@CapabilityInject(IBacteriaCapability.class)
-    public static final Capability<IBacteriaCapability> BACT_CAPABILITY = null;
+	
+    @CapabilityInject(IBacteriaCapability.class)
+    public static Capability<IBacteriaCapability> BACT_CAPABILITY = null;
 	
 	double bacteria=0.;
 	double death=0;
@@ -19,13 +22,13 @@ public class BacteriaCapability implements IBacteriaCapability {
 	public int growBact(double temp, int juice) {
 		double dbacteria = this.bacteria;
 		if (dbacteria > limitBacteria) {
-			death = death + 0.01 * Math.abs(dbacteria - juice);
-			dbacteria -= 0.01 * death;
+			death = death + Config.TANK_DEATHPERTICK.get() * Math.abs(dbacteria - juice);
+			dbacteria -= Config.TANK_DEATHMOD.get() * death;
 		} else if (bacteria > 0) {
 			// Find the next x-Value on the sigmoid function
 			double x = (-1. * Math.log(limitBacteria / dbacteria - 1.) + 6.) * temp / 12. + 1 / 20.;
-			dbacteria = limitBacteria / (1 + Math.exp((-x + 1. / (1. / (temp / 2))) * 6 * (1 / (temp / 2))))- 0.001 * death;
-			death -= 0.001 * death;
+			dbacteria = limitBacteria / (1 + Math.exp((-x + 1. / (1. / (temp / 2))) * 6 * (1 / (temp / 2))))- Config.TANK_RECOVERMOD.get() * death;
+			death -= Config.TANK_RECOVERMOD.get() * death;
 		}
 		// There can't be a negative amount of Bacteria
 		if (dbacteria < 1) {

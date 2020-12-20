@@ -1,21 +1,29 @@
 package mod.juicy.gui;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.platform.GlStateManager;
 
 import mod.juicy.Juicy;
 import mod.juicy.container.TankContainer;
+import mod.juicy.network.PacketHandler;
+import mod.juicy.network.TankPacket;
 import mod.juicy.tile.TankControllerTile;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.NewChatGui;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.api.distmarker.OnlyIn;
 
-@OnlyIn(Dist.CLIENT)
 public class TankScreen extends ContainerScreen<TankContainer>{
 	private static final ResourceLocation BACKGROUND_TEXTURE = new ResourceLocation(Juicy.MODID, "textures/gui/tank_gui.png");
-
+	public static int gas;
+	public static int gasCap;
+	public static int juice;
+	public static int juiceCap;
+	public static int bacteria;
+	public static int bacteriaCap;
+	
 	public TankScreen(TankContainer screenContainer, PlayerInventory inv, ITextComponent titleIn) {
 		super(screenContainer, inv, titleIn);
 		this.guiLeft = 0;
@@ -33,8 +41,18 @@ public class TankScreen extends ContainerScreen<TankContainer>{
 	@Override
 	protected void drawGuiContainerForegroundLayer(MatrixStack matrixStack, int mouseX, int mouseY) {
 		super.drawGuiContainerForegroundLayer(matrixStack, mouseX, mouseY);
-		this.font.drawString(matrixStack, this.title.getString(), 8f, 6f, 4210752);
-		this.font.drawString(matrixStack, this.playerInventory.getDisplayName().getString(), 8f, 90f, 4210752);
+		if(container.getPos() != null)
+		PacketHandler.sendToServer(new TankPacket(container.getPos()));
+		matrixStack.push();
+		float scale = 0.75f;
+		matrixStack.scale(scale, scale, scale);
+		//Gasnumber
+		drawString(matrixStack, Minecraft.getInstance().fontRenderer, Integer.toString(gas), Math.round(73/scale)+1, Math.round(63/scale)+1, 0xffffff);
+		//Juicenumber
+		drawString(matrixStack, Minecraft.getInstance().fontRenderer, Integer.toString(juice), Math.round(109/scale)+1, Math.round(63/scale)+1, 0xffffff);
+		//Bacterianumber
+		drawString(matrixStack, Minecraft.getInstance().fontRenderer, Integer.toString(bacteria), Math.round(145/scale)+1, Math.round(63/scale)+1, 0xffffff);
+		matrixStack.pop();
 	}
 
 	@Override
@@ -43,6 +61,16 @@ public class TankScreen extends ContainerScreen<TankContainer>{
 		int x = (this.width - this.xSize) / 2;
 		int y = (this.height - this.ySize) / 2;
 		this.blit(matrixStack, x, y, 0, 0, this.xSize, this.ySize);
+		int g = Math.round((float)gas/(float)gasCap*50);
+		int j = Math.round((float)juice/(float)juiceCap*50);
+		int b = Math.round((float)bacteria/((float)bacteriaCap*1.25f)*50);
+		// GasBar
+		this.blit(matrixStack, x + 79, y + 58 - g, 176, 50 - g, 12, g);
+		// JuiceBar
+		this.blit(matrixStack, x + 115, y + 58 - j, 188, 50 - j, 12, j);
+		// BacteriaBar
+		this.blit(matrixStack, x + 151, y + 58 - b, 200, 50 - b, 12, b);
 	}
 		
+	
 }

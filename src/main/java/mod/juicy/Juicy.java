@@ -9,17 +9,22 @@ import mod.juicy.capability.BacteriaFactory;
 import mod.juicy.capability.BacteriaStorage;
 import mod.juicy.capability.IBacteriaCapability;
 import mod.juicy.container.ContainerHolder;
+import mod.juicy.gui.GeneratorScreen;
 import mod.juicy.gui.TankScreen;
+import mod.juicy.item.ItemHolder;
+import mod.juicy.network.PacketHandler;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityManager;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fml.config.ModConfig;
 
 @Mod(Juicy.MODID)
 public class Juicy
@@ -36,11 +41,13 @@ public class Juicy
 		@Nonnull
 		public ItemStack createIcon()
 		{
-			return new ItemStack(Items.GRAVEL);
+			return new ItemStack(ItemHolder.JUICE_BUCKET);
 		}
 	};
 	
     public Juicy() {
+    	//Add Serverside Config
+    	ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, Config.SERVER_CONFIG);
         // Register the setup method for modloading
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::clientSetup);
@@ -53,10 +60,12 @@ public class Juicy
 	private void setup(final FMLCommonSetupEvent event) {
 		LOGGER.info("Register Bacteria Capability");
 		CapabilityManager.INSTANCE.register(IBacteriaCapability.class, new BacteriaStorage(), new BacteriaFactory());
+		PacketHandler.registerMessages();
 	}
 
 	private void clientSetup(final FMLClientSetupEvent event) {
 		ScreenManager.registerFactory(ContainerHolder.TANK_CONTAINER, TankScreen::new);
+		ScreenManager.registerFactory(ContainerHolder.GENERATOR_CONTAINER, GeneratorScreen::new);
 		Juicy.LOGGER.info("Screens Registered");
 	}
 

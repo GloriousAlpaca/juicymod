@@ -30,7 +30,6 @@ public class TankSlaveTile extends TileEntity {
 	@Override
 	public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
 		if (controller != null) {
-			Juicy.LOGGER.info("CONTROLLER NON NULL");
 			return this.getWorld().getTileEntity(controller).getCapability(cap, side);
 		} else
 			return super.getCapability(cap, side);
@@ -81,7 +80,6 @@ public class TankSlaveTile extends TileEntity {
 	public void read(BlockState state, CompoundNBT nbt) {
 		super.read(state, nbt);
 		int[] controllerCoords = nbt.getIntArray("controller");
-		Juicy.LOGGER.info("ARRAY LENGTH: " + controllerCoords.length);
 		if (controllerCoords.length == 3) {
 			BlockPos cpos = new BlockPos(controllerCoords[0], controllerCoords[1], controllerCoords[2]);
 			setController(cpos);

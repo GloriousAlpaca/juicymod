@@ -19,6 +19,7 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
+import net.minecraft.inventory.container.SimpleNamedContainerProvider;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
@@ -94,10 +95,9 @@ public class TankBlock extends Block {
 						.receiveBact(player.getActiveItemStack().getCapability(BacteriaCapability.BACT_CAPABILITY)
 								.orElseThrow(() -> new NullPointerException()).getBact(), true));
 				return ActionResultType.SUCCESS;
-			} else {
+			} else if(player.getActiveItemStack().equals(ItemStack.EMPTY)){
 				TileEntity tile = worldIn.getTileEntity(pos);
 				if (tile != null) {
-					//TODO Add GUI
 					INamedContainerProvider containerProvider = new INamedContainerProvider() {
 	                    @Override
 	                    public ITextComponent getDisplayName() {
@@ -109,14 +109,9 @@ public class TankBlock extends Block {
 	                        return new TankContainer(i, worldIn, pos, playerInventory, playerEntity);
 	                    }
 	                };
-					if (tile instanceof TankSlaveTile) {
-						NetworkHooks.openGui((ServerPlayerEntity) player, containerProvider, ((TankSlaveTile) tile).getController());
-						return ActionResultType.SUCCESS;
-					}
-					else if(tile instanceof TankControllerTile) {
 						NetworkHooks.openGui((ServerPlayerEntity) player, containerProvider, tile.getPos());
 						return ActionResultType.SUCCESS;
-					}
+
 				} else {
 					return ActionResultType.FAIL;
 				}

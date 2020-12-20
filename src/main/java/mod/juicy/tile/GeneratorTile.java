@@ -1,5 +1,6 @@
 package mod.juicy.tile;
 
+import mod.juicy.Config;
 import mod.juicy.fluid.FluidHolder;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
@@ -8,7 +9,6 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.energy.EnergyStorage;
-import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
@@ -16,12 +16,11 @@ import net.minecraftforge.fluids.capability.templates.FluidTank;
 public class GeneratorTile extends TileEntity implements ITickableTileEntity{
 	FluidTank tank;
 	EnergyStorage energy;
-	int RFperMb;
 	
 	public GeneratorTile() {
 		super(TileHolder.TILE_GENERATOR_TYPE);
-		tank = new FluidTank(5*FluidAttributes.BUCKET_VOLUME, (fstack) -> fstack.getFluid().isEquivalentTo(FluidHolder.MOBGAS_STILL));
-		energy = new EnergyStorage(20000);
+		tank = new FluidTank(Config.GENERATOR_GASCAP.get(), (fstack) -> fstack.getFluid().isEquivalentTo(FluidHolder.MOBGAS_STILL));
+		energy = new EnergyStorage(Config.GENERATOR_ENERGYCAP.get());
 	}
 	
 
@@ -45,9 +44,9 @@ public class GeneratorTile extends TileEntity implements ITickableTileEntity{
 		{
 			if(!tank.isEmpty()) {
 				int drained = tank.drain(1, FluidAction.SIMULATE).getAmount();
-				if(energy.receiveEnergy(RFperMb*drained, true)>0) {
+				if(energy.receiveEnergy(Config.GENERATOR_RFPERGAS.get()*drained, true)>0) {
 					tank.drain(drained, FluidAction.EXECUTE);
-					energy.receiveEnergy(RFperMb*drained, false);
+					energy.receiveEnergy(Config.GENERATOR_RFPERGAS.get()*drained, false);
 				}
 			}
 		}

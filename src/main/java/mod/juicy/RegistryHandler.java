@@ -9,6 +9,7 @@ import mod.juicy.block.TankBlock;
 import mod.juicy.block.TankControllerBlock;
 import mod.juicy.block.ThermBlock;
 import mod.juicy.block.ValveBlock;
+import mod.juicy.container.GeneratorContainer;
 import mod.juicy.container.TankContainer;
 import mod.juicy.fluid.FluidHolder;
 import mod.juicy.item.ItemHolder;
@@ -90,6 +91,11 @@ public class RegistryHandler {
         BlockPos pos = data.readBlockPos();
         World world = inv.player.getEntityWorld();
         return new TankContainer(windowId, world, pos, inv, inv.player);
+    }));
+    public static final RegistryObject<ContainerType<GeneratorContainer>> GENERATOR_CONTAINER = CONTAINERS.register("generator", () -> IForgeContainerType.create((windowId, inv, data) -> {
+        BlockPos pos = data.readBlockPos();
+        World world = inv.player.getEntityWorld();
+        return new GeneratorContainer(windowId, world, pos, inv, inv.player);
     }));
 	
 	//Register Items

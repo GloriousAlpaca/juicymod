@@ -3,6 +3,7 @@ package mod.juicy.tile;
 import java.util.ArrayDeque;
 import java.util.Vector;
 
+import mod.juicy.Config;
 import mod.juicy.Juicy;
 import mod.juicy.block.TankBlock;
 import mod.juicy.capability.BacteriaCapability;
@@ -31,7 +32,7 @@ public class TankControllerTile extends TileEntity implements ITickableTileEntit
 	public TankControllerTile() {
 		super(TileHolder.TILE_TANK_CONTROLLER_TYPE);
 		bacteria = new BacteriaCapability(Integer.MAX_VALUE);
-		juice = new JuiceTank(FluidAttributes.BUCKET_VOLUME * 2, FluidAttributes.BUCKET_VOLUME);
+		juice = new JuiceTank(FluidAttributes.BUCKET_VOLUME, 500);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -48,12 +49,7 @@ public class TankControllerTile extends TileEntity implements ITickableTileEntit
 	@Override
 	public void tick() {
 		if (!this.getWorld().isRemote) {
-			if (juice.getFluidAmount() > 0) {
-				juice.addGas(1);
-				juice.removeFluid(1);
-				Juicy.LOGGER.info("Gas Amount: " + juice.getFluidInTank(2).getAmount());
-				Juicy.LOGGER.info("Fluid Amount: " + juice.getFluidInTank(1).getAmount());
-			}
+			juice.addGas(1);
 		}
 	}
 
@@ -105,7 +101,7 @@ public class TankControllerTile extends TileEntity implements ITickableTileEntit
 	}
 
 	public void updateCapacity() {
-		juice.setCapacity(this.getCapacity() * FluidAttributes.BUCKET_VOLUME + FluidAttributes.BUCKET_VOLUME);
+		juice.setCapacity(this.getCapacity() * Config.TANK_JCAPPERBLOCK.get() + FluidAttributes.BUCKET_VOLUME);
 		Juicy.LOGGER.info("CAPACITY: "+juice.getCapacity());
 	}
 
