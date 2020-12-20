@@ -3,6 +3,8 @@ package mod.juicy.tile;
 import java.util.ArrayDeque;
 import java.util.Vector;
 
+import javax.annotation.Nullable;
+
 import mod.juicy.Config;
 import mod.juicy.Juicy;
 import mod.juicy.block.TankBlock;
@@ -11,6 +13,7 @@ import mod.juicy.capability.IBacteriaCapability;
 import mod.juicy.capability.JuiceTank;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
@@ -20,11 +23,14 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidAttributes;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandler.FluidAction;
 
 public class TankControllerTile extends TileEntity implements ITickableTileEntity {
 	static Vector3i[] neighbours = { new Vector3i(1, 0, 0), new Vector3i(-1, 0, 0), new Vector3i(0, 1, 0),
 			new Vector3i(0, -1, 0), new Vector3i(0, 0, 1), new Vector3i(0, 0, -1) };
 	Vector<BlockPos> multiBlock;
+	Vector<AlertTile> alerts;
+	
 	IBacteriaCapability bacteria;
 	JuiceTank juice;
 	double temperature;
@@ -33,6 +39,8 @@ public class TankControllerTile extends TileEntity implements ITickableTileEntit
 		super(TileHolder.TILE_TANK_CONTROLLER_TYPE);
 		bacteria = new BacteriaCapability(Integer.MAX_VALUE);
 		juice = new JuiceTank(FluidAttributes.BUCKET_VOLUME, 500);
+		multiBlock = new Vector<BlockPos>();
+		temperature = 20;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -49,15 +57,27 @@ public class TankControllerTile extends TileEntity implements ITickableTileEntit
 	@Override
 	public void tick() {
 		if (!this.getWorld().isRemote) {
-			juice.addGas(1);
+			if(bacteria.getBact()>0) {
+			bacteria.setLimit((int) Math.round(juice.getFluidAmount()*Config.TANK_BPERJ.get()));
+			double newBact = bacteria.growBact(temperature, juice.getFluidAmount());
+			Juicy.LOGGER.info("Bacteria Amount: "+newBact);
+			bacteria.setBact(newBact);
+			int drained = juice.removeFluid(Math.max((int) Math.round(newBact*Config.TANK_GPERB.get()), 1), false);
+			Juicy.LOGGER.info("Juice Drained: "+drained);
+			int added = juice.addGas(drained+(int) Math.round(Config.TANK_GBONUS.get()*Math.abs(newBact-juice.getFluidAmount())), false);
+			Juicy.LOGGER.info("Gas Added: "+added);
+			}
 		}
 	}
 
-	public Vector<BlockPos> setMultiBlock(Vector<BlockPos> tankPos) {
+	public void setMultiBlock(Vector<BlockPos> tankPos) {
 		multiBlock = tankPos;
-		return multiBlock;
 	}
 
+	public Vector<BlockPos> getMultiBlock(){
+		return multiBlock;
+	}
+	
 	public Vector<BlockPos> addtoMultiBlock(BlockPos tankPos) {
 		multiBlock.add(tankPos);
 		return multiBlock;
@@ -69,7 +89,10 @@ public class TankControllerTile extends TileEntity implements ITickableTileEntit
 	}
 	
 	public Vector<BlockPos> searchMultiBlock() {
-		Vector<BlockPos> marked = new Vector<BlockPos>();
+		return searchMultiBlock(new Vector<BlockPos>());
+	}
+	
+	public Vector<BlockPos> searchMultiBlock(Vector<BlockPos> marked) {
 		ArrayDeque<BlockPos> queue = new ArrayDeque<BlockPos>();
 		queue.add(this.pos);
 		while (!queue.isEmpty()) {
@@ -97,12 +120,14 @@ public class TankControllerTile extends TileEntity implements ITickableTileEntit
 		for (int i = 0; i < multiBlock.size(); i++) {
 			capacity += this.getWorld().getTileEntity(multiBlock.get(i)) instanceof TankTile ? 1 : 0;
 		}
+		Juicy.LOGGER.info("CAPACITY: "+capacity);
 		return capacity;
 	}
 
 	public void updateCapacity() {
-		juice.setCapacity(this.getCapacity() * Config.TANK_JCAPPERBLOCK.get() + FluidAttributes.BUCKET_VOLUME);
-		Juicy.LOGGER.info("CAPACITY: "+juice.getCapacity());
+		int cap = this.getCapacity();
+		juice.setTankCapacity(1,  cap * Config.TANK_JCAPPERBLOCK.get() + FluidAttributes.BUCKET_VOLUME);
+		juice.setTankCapacity(2,  Math.round((cap * Config.TANK_JCAPPERBLOCK.get() + FluidAttributes.BUCKET_VOLUME)/2f));
 	}
 
 	public void setTemperature(double pTemp) {
@@ -119,7 +144,6 @@ public class TankControllerTile extends TileEntity implements ITickableTileEntit
 	 * @param tanks Blockpos of the tankblocks
 	 */
 	public void announceController(Vector<BlockPos> tanks) {
-		//TODO FIX NULLPOINTER
 		tanks.forEach(tankpos ->{
 			TileEntity tile = this.getWorld().getTileEntity(tankpos);
 			if(tile != null)
@@ -134,7 +158,7 @@ public class TankControllerTile extends TileEntity implements ITickableTileEntit
 	 * @param tanks Blockpos of the tankblocks
 	 */
 	public void renounceController() {
-		//TODO FIX NULLPOINTER
+		if(!multiBlock.isEmpty())
 		multiBlock.forEach(tankpos ->{
 			TileEntity tile = this.getWorld().getTileEntity(tankpos);
 			if(tile != null)
@@ -148,6 +172,13 @@ public class TankControllerTile extends TileEntity implements ITickableTileEntit
 		super.read(state, nbt);
 		BacteriaCapability.BACT_CAPABILITY.readNBT(bacteria, null, nbt.get("bacteria"));
 		juice.readFromNBT((CompoundNBT) nbt.get("juice"));
+		int[] multiX = nbt.getIntArray("multiblockx");
+		int[] multiY = nbt.getIntArray("multiblocky");
+		int[] multiZ = nbt.getIntArray("multiblockz");
+		multiBlock = new Vector<BlockPos>();
+		for(int i=0;i<multiX.length;i++) {
+			multiBlock.add(new BlockPos(multiX[i], multiY[i], multiZ[i]));
+		}
 	}
 
 	@Override
@@ -155,7 +186,23 @@ public class TankControllerTile extends TileEntity implements ITickableTileEntit
 		CompoundNBT nbt = super.write(compound);
 		nbt.put("bacteria",BacteriaCapability.BACT_CAPABILITY.writeNBT(bacteria, null));
 		nbt.put("juice",juice.writeToNBT(new CompoundNBT()));
+		int[] multiX = new int[multiBlock.size()];
+		int[] multiY = new int[multiBlock.size()];
+		int[] multiZ = new int[multiBlock.size()];
+		for(int i=0;i<multiBlock.size();i++) {
+			multiX[i] = multiBlock.get(i).getX();
+			multiY[i] = multiBlock.get(i).getY();
+			multiZ[i] = multiBlock.get(i).getZ();
+		}
+		nbt.putIntArray("multiblockx", multiX);
+		nbt.putIntArray("multiblocky", multiY);
+		nbt.putIntArray("multiblockz", multiZ);
 		return nbt;
 	}
 
+	@Override
+	public void handleUpdateTag(BlockState state, CompoundNBT tag) {
+		super.read(state, tag);
+	}
+	
 }

@@ -16,11 +16,15 @@ import net.minecraftforge.fluids.capability.templates.FluidTank;
 public class GeneratorTile extends TileEntity implements ITickableTileEntity{
 	FluidTank tank;
 	EnergyStorage energy;
+	int gasPerTick;
+	int rfLastTick;
 	
 	public GeneratorTile() {
 		super(TileHolder.TILE_GENERATOR_TYPE);
 		tank = new FluidTank(Config.GENERATOR_GASCAP.get(), (fstack) -> fstack.getFluid().isEquivalentTo(FluidHolder.MOBGAS_STILL));
 		energy = new EnergyStorage(Config.GENERATOR_ENERGYCAP.get());
+		gasPerTick = 1;
+		rfLastTick = 0;
 	}
 	
 
@@ -43,14 +47,20 @@ public class GeneratorTile extends TileEntity implements ITickableTileEntity{
 		if(!world.isRemote)
 		{
 			if(!tank.isEmpty()) {
-				int drained = tank.drain(1, FluidAction.SIMULATE).getAmount();
-				if(energy.receiveEnergy(Config.GENERATOR_RFPERGAS.get()*drained, true)>0) {
-					tank.drain(drained, FluidAction.EXECUTE);
-					energy.receiveEnergy(Config.GENERATOR_RFPERGAS.get()*drained, false);
+				int gasPerTick = 10*Math.round((float)tank.getFluidAmount()/(float)tank.getCapacity());
+				int drained = tank.drain(gasPerTick, FluidAction.SIMULATE).getAmount();
+				int generated = energy.receiveEnergy(Config.GENERATOR_RFPERGAS.get()*drained, true);
+				if(generated>0) {
+					tank.drain(generated/Config.GENERATOR_RFPERGAS.get(), FluidAction.EXECUTE);
+					energy.receiveEnergy(generated, false);
 				}
+				rfLastTick = generated;
 			}
 		}
-		
+	}
+	
+	public int getLastGenerated() {
+		return rfLastTick;
 	}
 	
 }

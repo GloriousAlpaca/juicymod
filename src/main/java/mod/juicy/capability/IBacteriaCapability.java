@@ -49,4 +49,12 @@ public interface IBacteriaCapability {
 		
 		public CompoundNBT writeToNBT(CompoundNBT nbt);
 		
+		/**
+		 * Grow Bacteria in the Tank
+		 * @param temp The Temperature in the Tank
+		 * @param juice How much Juice is in the Tank
+		 * @return
+		 */
+		public double growBact(double temp, int juice);
+		
 }

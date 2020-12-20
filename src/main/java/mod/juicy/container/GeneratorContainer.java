@@ -17,7 +17,6 @@ public class GeneratorContainer extends Container {
 
 	public GeneratorContainer(int windowId, World worldIn, BlockPos pos, PlayerInventory playerInventory, PlayerEntity player) {
 		super(ContainerHolder.GENERATOR_CONTAINER, windowId);
-		// TODO Auto-generated constructor stub
 		tilePos = pos;
 		this.world = worldIn;
 		new InvWrapper(playerInventory);
@@ -35,12 +34,12 @@ public class GeneratorContainer extends Container {
 
 	@Override
 	public boolean canInteractWith(PlayerEntity playerIn) {
-		// TODO Auto-generated method stub
 		return isWithinUsableDistance(IWorldPosCallable.of(world, tilePos), playerIn, BlockHolder.GENERATOR_BLOCK);
 	}
 
 	@Override
 	public ItemStack transferStackInSlot(PlayerEntity playerIn, int index) {
+		//TODO FIX TRANSFERSTACKINSLOT GENERATOR
 		return ItemStack.EMPTY;
 	}
 

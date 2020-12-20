@@ -1,27 +1,14 @@
 package mod.juicy.tile;
 
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.nbt.CompoundNBT;
 
 public class ThermTile extends TankSlaveTile {
-	double temperaturelow;
-	double temperaturehigh;
+	double temperatureLow=10.;
+	double temperatureHigh=20.;
 
 	public ThermTile() {
 		super(TileHolder.TILE_THERM_TYPE);
-	}
-
-	public void neighborChanged(BlockState state, World worldIn, BlockPos pos, Block blockIn, BlockPos fromPos,
-			boolean isMoving) {
-		if (!worldIn.isRemote) {
-			if (worldIn.isBlockPowered(pos)) {
-				setTemp(temperaturehigh);
-			} else {
-				setTemp(temperaturelow);
-			}
-		}
 	}
 
 	public void setTemp(double pTemp) {
@@ -30,5 +17,40 @@ public class ThermTile extends TankSlaveTile {
 			tile.setTemperature(pTemp);
 		}
 	}
-
+	
+	public void setHigh(double ptemperatureHigh) {
+		this.temperatureHigh = ptemperatureHigh;
+	}
+	
+	public void setLow(double ptemperatureLow) {
+		this.temperatureLow = ptemperatureLow;
+	}
+	
+	public double getHigh() {
+		return this.temperatureHigh;
+	}
+	
+	public double getLow() {
+		return this.temperatureLow;
+	}
+	
+	@Override
+	public void read(BlockState state, CompoundNBT nbt) {
+		super.read(state, nbt);
+		this.temperatureHigh = nbt.getDouble("high");
+		this.temperatureLow = nbt.getDouble("low");
+	}
+	
+	@Override
+	public CompoundNBT write(CompoundNBT compound) {
+		CompoundNBT nbt = super.write(compound);
+		nbt.putDouble("high", this.temperatureHigh);
+		nbt.putDouble("low", temperatureLow);
+		return nbt;
+	}
+	
+	@Override
+	public void handleUpdateTag(BlockState state, CompoundNBT tag) {
+		super.read(state, tag);
+	}
 }

@@ -32,38 +32,36 @@ public class GeneratorBlock extends Block{
 
 	@Override
 	public boolean hasTileEntity(BlockState state) {
-		// TODO Auto-generated method stub
 		return true;
 	}
 	
 	@Override
 	public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-		// TODO Auto-generated method stub
 		return new GeneratorTile();
 	}
 	
 	@Override
 	public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player,
 			Hand handIn, BlockRayTraceResult hit) {
-		if(!worldIn.isRemote) {
-		if (player.getActiveItemStack().equals(ItemStack.EMPTY)) {
-			TileEntity tile = worldIn.getTileEntity(pos);
-			if (tile != null) {
-				INamedContainerProvider containerProvider = new INamedContainerProvider() {
-					@Override
-					public ITextComponent getDisplayName() {
-						return new TranslationTextComponent("screen.juicy.generator");
-					}
+		if (!player.isCrouching()) {
+			if (!worldIn.isRemote) {
+				TileEntity tile = worldIn.getTileEntity(pos);
+				if (tile != null) {
+					INamedContainerProvider containerProvider = new INamedContainerProvider() {
+						@Override
+						public ITextComponent getDisplayName() {
+							return new TranslationTextComponent("screen.juicy.generator");
+						}
 
-					@Override
-					public Container createMenu(int i, PlayerInventory playerInventory, PlayerEntity playerEntity) {
-						return new GeneratorContainer(i, worldIn, pos, playerInventory, playerEntity);
-					}
-				};
-				NetworkHooks.openGui((ServerPlayerEntity) player, containerProvider, tile.getPos());
-				return ActionResultType.SUCCESS;
+						@Override
+						public Container createMenu(int i, PlayerInventory playerInventory, PlayerEntity playerEntity) {
+							return new GeneratorContainer(i, worldIn, pos, playerInventory, playerEntity);
+						}
+					};
+					NetworkHooks.openGui((ServerPlayerEntity) player, containerProvider, tile.getPos());
+				}
 			}
-		}
+			return ActionResultType.func_233537_a_(worldIn.isRemote);
 		}
 		return ActionResultType.PASS;
 	}

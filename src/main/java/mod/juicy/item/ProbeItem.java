@@ -17,11 +17,8 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.CapabilityInject;
 import net.minecraftforge.common.util.LazyOptional;
 
 public class ProbeItem extends Item{
@@ -58,9 +55,8 @@ public class ProbeItem extends Item{
 	
 	@Override
 	public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-		//TODO Fix Client Sync
 		LazyOptional<IBacteriaCapability> cap = stack.getCapability(BacteriaCapability.BACT_CAPABILITY, null);
-		cap.ifPresent(cap1 -> tooltip.add(new TranslationTextComponent("information.probeitem", Long.toString(Math.round(cap1.getBact())))));
+		cap.ifPresent(cap1 -> tooltip.add(new TranslationTextComponent("information.probeitem").appendString(Long.toString(Math.round(cap1.getBact())))));
 	}
 	
 	
@@ -72,6 +68,7 @@ public class ProbeItem extends Item{
 	@Override
 	public CompoundNBT getShareTag(ItemStack stack) {
 		CompoundNBT nbt = super.getShareTag(stack);
+		if(nbt != null)
 		stack.getCapability(BacteriaCapability.BACT_CAPABILITY, null).ifPresent(cap->nbt.put("bacteria", BacteriaCapability.BACT_CAPABILITY.writeNBT(cap, null)));
 		return nbt;
 	}

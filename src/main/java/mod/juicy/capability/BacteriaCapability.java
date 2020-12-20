@@ -18,16 +18,23 @@ public class BacteriaCapability implements IBacteriaCapability {
 	public BacteriaCapability(int pmaxBacteria) {
 		limitBacteria = pmaxBacteria;
 	}
-		
-	public int growBact(double temp, int juice) {
+
+	/**
+	 * Grow Bacteria in the Tank
+	 * @param temp A Temperature between 0C and 40C
+	 * @param juice How much Juice is in the Tank
+	 * @return
+	 */
+	public double growBact(double temp, int juice) {
 		double dbacteria = this.bacteria;
+		double a = Math.exp(-0.13246*(temp-40));
 		if (dbacteria > limitBacteria) {
 			death = death + Config.TANK_DEATHPERTICK.get() * Math.abs(dbacteria - juice);
 			dbacteria -= Config.TANK_DEATHMOD.get() * death;
 		} else if (bacteria > 0) {
 			// Find the next x-Value on the sigmoid function
-			double x = (-1. * Math.log(limitBacteria / dbacteria - 1.) + 6.) * temp / 12. + 1 / 20.;
-			dbacteria = limitBacteria / (1 + Math.exp((-x + 1. / (1. / (temp / 2))) * 6 * (1 / (temp / 2))))- Config.TANK_RECOVERMOD.get() * death;
+			double x = (-1. * Math.log(limitBacteria / dbacteria - 1.) + 6.) * a / 12. + 1 / 20.;
+			dbacteria = limitBacteria / (1 + Math.exp((-x + 1. / (1. / (a / 2))) * 6 * (1 / (a / 2))))- Config.TANK_RECOVERMOD.get() * death;
 			death -= Config.TANK_RECOVERMOD.get() * death;
 		}
 		// There can't be a negative amount of Bacteria
@@ -35,7 +42,7 @@ public class BacteriaCapability implements IBacteriaCapability {
 			dbacteria = 0;
 			death = 0;
 		}
-		return (int) Math.round(dbacteria);
+		return dbacteria;
 	}
 	
 	@Override

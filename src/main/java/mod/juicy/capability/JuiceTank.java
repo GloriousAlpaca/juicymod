@@ -4,6 +4,7 @@ import javax.annotation.Nonnull;
 
 import mod.juicy.Juicy;
 import mod.juicy.fluid.FluidHolder;
+import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.capability.templates.FluidTank;
@@ -98,20 +99,22 @@ public class JuiceTank extends FluidTank {
 		this.gas = stack;
 	}
 
-	public void addGas(int amount) {
-			Juicy.LOGGER.info("ADDING: "+amount+" GAS");
-			this.gas = new FluidStack(FluidHolder.MOBGAS_STILL, Math.min(this.gas.getAmount()+amount, gascapacity));
+	public int addGas(int amount, boolean simulate) {
+			int added = Math.min(this.gas.getAmount()+amount, gascapacity-this.gas.getAmount());
+			if(!simulate)
+			this.gas = new FluidStack(FluidHolder.MOBGAS_STILL, gas.getAmount()+added);
+			return added;
 	}
 
 	public int getGasAmount() {
 		return gas.getAmount();
 	}
 
-	public void removeFluid(int amount) {
-		if(fluid.getAmount()>amount)
-			this.fluid = new FluidStack(this.fluid, this.fluid.getAmount()-amount);
-		else
-			this.fluid = FluidStack.EMPTY;
+	public int removeFluid(int amount, boolean simulate) {
+		int removed = Math.min(fluid.getAmount(), amount);
+		if(!simulate)
+			this.fluid = new FluidStack(FluidHolder.MOBJUICE_STILL, fluid.getAmount()-removed);
+		return removed;
 	}
 
 	@Nonnull
@@ -134,6 +137,13 @@ public class JuiceTank extends FluidTank {
 			return 0;
 	}
 
+	public void setTankCapacity(int tank, int pcapacity) {
+		if (tank == 1)
+			capacity = pcapacity;
+		else if (tank == 2)
+			gascapacity = pcapacity;
+	}
+	
 	public void setIntake(int pIntake) {
 		this.intake = pIntake;
 	}
@@ -144,9 +154,9 @@ public class JuiceTank extends FluidTank {
 		FluidStack gas = FluidStack.loadFluidStackFromNBT((CompoundNBT) nbt.get("gas"));
 		setFluid(fluid);
 		setGas(gas);
+		setTankCapacity(1, nbt.getInt("fluidcap"));
+		setTankCapacity(2, nbt.getInt("gascap"));
 		this.intake = nbt.getInt("intake");
-		Juicy.LOGGER.info("READ NBT FLUID: "+fluid.getDisplayName()+fluid.getAmount());
-		Juicy.LOGGER.info("READ NBT GAS: "+gas.getDisplayName()+gas.getAmount());
 		return this;
 	}
 
@@ -155,6 +165,8 @@ public class JuiceTank extends FluidTank {
 		Juicy.LOGGER.info("WRITE NBT JUICETANK!-----------------------------------------------------------------------------------------------------------");
 		nbt.put("fluid", fluid.writeToNBT(new CompoundNBT()));
 		nbt.put("gas", gas.writeToNBT(new CompoundNBT()));
+		nbt.putInt("fluidcap", capacity);
+		nbt.putInt("gascap", gascapacity);
 		Juicy.LOGGER.info("WRITE NBT FLUID: "+fluid.getDisplayName()+fluid.getAmount());
 		Juicy.LOGGER.info("WRITE NBT GAS: "+gas.getDisplayName()+gas.getAmount());
 		nbt.putInt("intake", intake);

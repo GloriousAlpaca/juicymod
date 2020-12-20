@@ -24,4 +24,6 @@ public class TileHolder {
 	@ObjectHolder("generator")
 	public static TileEntityType<GeneratorTile> TILE_GENERATOR_TYPE = null;
 
+	@ObjectHolder("alert")
+	public static TileEntityType<AlertTile> TILE_ALERT_TYPE = null;
 }

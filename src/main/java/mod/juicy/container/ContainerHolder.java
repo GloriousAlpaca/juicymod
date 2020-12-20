@@ -13,5 +13,9 @@ public class ContainerHolder {
 	@ObjectHolder ("generator")
     public static ContainerType<GeneratorContainer> GENERATOR_CONTAINER = null;
 	
+	@ObjectHolder ("thermostat")
+    public static ContainerType<ThermContainer> THERM_CONTAINER = null;
 	
+	@ObjectHolder ("valve")
+    public static ContainerType<ValveContainer> VALVE_CONTAINER = null;
 }

@@ -1,5 +1,7 @@
 package mod.juicy.block;
 
+import java.util.Vector;
+
 import javax.annotation.Nullable;
 
 import mod.juicy.capability.BacteriaCapability;
@@ -8,6 +10,7 @@ import mod.juicy.container.TankContainer;
 import mod.juicy.tile.TankControllerTile;
 import mod.juicy.tile.TankSlaveTile;
 import mod.juicy.tile.TankTile;
+import mod.juicy.util.JuicyHelper;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -19,7 +22,6 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.inventory.container.SimpleNamedContainerProvider;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
@@ -65,59 +67,91 @@ public class TankBlock extends Block {
 				tile.setController(controllerTile);
 				tile.markDirty();
 				TankControllerTile controller = ((TankControllerTile) worldIn.getTileEntity(tile.getController()));
-				controller.addtoMultiBlock(pos);
+				Vector<BlockPos> multiBlock = controller.searchMultiBlock();
+				controller.setMultiBlock(multiBlock);
 				controller.updateCapacity();
+				controller.markDirty();
 			}
 		}
 	}
 
-	/*
-	 * @Override public void onBlockHarvested(World worldIn, BlockPos pos,
-	 * BlockState state, PlayerEntity player) { super.onBlockHarvested(worldIn, pos,
-	 * state, player); TileEntity tile = worldIn.getTileEntity(pos); if(tile !=
-	 * null) { if(tile instanceof TankControllerTile) { ((TankControllerTile)
-	 * tile).renounceController(); } else { ((TankControllerTile)
-	 * worldIn.getTileEntity(((TankSlaveTile)
-	 * tile).getController())).removeFromMultiBlock(pos); } } }
-	 */
+
+	@Override
+	public void onBlockHarvested(World worldIn, BlockPos pos, BlockState state, PlayerEntity player) {
+		super.onBlockHarvested(worldIn, pos, state, player);
+		if (!worldIn.isRemote) {
+			TileEntity tile = worldIn.getTileEntity(pos);
+			if (tile != null) {
+				if (tile instanceof TankControllerTile) {
+					((TankControllerTile) tile).renounceController();
+				} else {
+					// TODO Fix Nullpointer and Multiblock structure
+					TankControllerTile controller = (TankControllerTile) worldIn.getTileEntity(((TankSlaveTile) tile).getController());
+					Vector<BlockPos> oldMulti = controller.getMultiBlock();
+					Vector<BlockPos> marked = new Vector<BlockPos>();
+					marked.add(pos);
+					controller.searchMultiBlock(marked);
+					marked.remove(pos);
+					controller.setMultiBlock(marked);
+					controller.updateCapacity();
+					oldMulti.removeAll(marked);
+					oldMulti.forEach(slavepos->{
+						TileEntity slave = worldIn.getTileEntity(slavepos);
+						if(tile != null)
+							if(tile instanceof TankSlaveTile)
+								((TankSlaveTile) slave).setController(null);
+					});
+				}
+			}
+		}
+	}
 
 	@Override
 	public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player,
 			Hand handIn, BlockRayTraceResult hit) {
 		// TODO Fix Bucket Interaction
-		if (!worldIn.isRemote) {
-			if (FluidUtil.interactWithFluidHandler(player, handIn, worldIn, hit.getPos(), hit.getFace())) {
-				return ActionResultType.SUCCESS;
-			} else if (player.getActiveItemStack().getCapability(BacteriaCapability.BACT_CAPABILITY).isPresent()) {
-				LazyOptional<IBacteriaCapability> bacttile = worldIn.getTileEntity(pos)
+		if (FluidUtil.interactWithFluidHandler(player, handIn, worldIn, hit.getPos(), hit.getFace())) {
+			
+			if(!worldIn.isRemote)
+			JuicyHelper.getController(pos, worldIn).ifPresent(controller -> controller.markDirty());
+			return ActionResultType.func_233537_a_(worldIn.isRemote);
+			
+		} else if (player.getHeldItem(handIn).getCapability(BacteriaCapability.BACT_CAPABILITY).isPresent() && !player.isCrouching()) {
+			
+			if(!worldIn.isRemote) {
+			LazyOptional<IBacteriaCapability> bacttile = worldIn.getTileEntity(pos).getCapability(BacteriaCapability.BACT_CAPABILITY);
+			bacttile.ifPresent(cap -> {
+				LazyOptional<IBacteriaCapability> playercap = player.getHeldItemMainhand()
 						.getCapability(BacteriaCapability.BACT_CAPABILITY);
-				bacttile.ifPresent(cap -> cap
-						.receiveBact(player.getActiveItemStack().getCapability(BacteriaCapability.BACT_CAPABILITY)
-								.orElseThrow(() -> new NullPointerException()).getBact(), true));
-				return ActionResultType.SUCCESS;
-			} else if(player.getActiveItemStack().equals(ItemStack.EMPTY)){
+				double drained = playercap.map(bact -> bact.extractBact(bact.getBact(), false)).orElse(0.);
+				cap.setBact(drained+cap.getBact());
+			});
+			JuicyHelper.getController(pos, worldIn).ifPresent(controller -> controller.markDirty());
+			}
+			return ActionResultType.func_233537_a_(worldIn.isRemote);
+			
+		} else if (!player.isCrouching()) {
+			
+			if (!worldIn.isRemote) {
 				TileEntity tile = worldIn.getTileEntity(pos);
 				if (tile != null) {
 					INamedContainerProvider containerProvider = new INamedContainerProvider() {
-	                    @Override
-	                    public ITextComponent getDisplayName() {
-	                        return new TranslationTextComponent("screen.juicy.tank");
-	                    }
+						@Override
+						public ITextComponent getDisplayName() {
+							return new TranslationTextComponent("screen.juicy.tank");
+						}
 
-	                    @Override
-	                    public Container createMenu(int i, PlayerInventory playerInventory, PlayerEntity playerEntity) {
-	                        return new TankContainer(i, worldIn, pos, playerInventory, playerEntity);
-	                    }
-	                };
-						NetworkHooks.openGui((ServerPlayerEntity) player, containerProvider, tile.getPos());
-						return ActionResultType.SUCCESS;
-
-				} else {
-					return ActionResultType.FAIL;
+						@Override
+						public Container createMenu(int i, PlayerInventory playerInventory, PlayerEntity playerEntity) {
+							return new TankContainer(i, worldIn, pos, playerInventory, playerEntity);
+						}
+					};
+					NetworkHooks.openGui((ServerPlayerEntity) player, containerProvider, tile.getPos());
 				}
 			}
-		}
+			return ActionResultType.SUCCESS;
+	}
 		return ActionResultType.PASS;
 	}
-
+	
 }

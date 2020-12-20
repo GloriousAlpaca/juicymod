@@ -11,6 +11,8 @@ import mod.juicy.block.ThermBlock;
 import mod.juicy.block.ValveBlock;
 import mod.juicy.container.GeneratorContainer;
 import mod.juicy.container.TankContainer;
+import mod.juicy.container.ThermContainer;
+import mod.juicy.container.ValveContainer;
 import mod.juicy.fluid.FluidHolder;
 import mod.juicy.item.ItemHolder;
 import mod.juicy.item.ProbeItem;
@@ -97,7 +99,17 @@ public class RegistryHandler {
         World world = inv.player.getEntityWorld();
         return new GeneratorContainer(windowId, world, pos, inv, inv.player);
     }));
-	
+    public static final RegistryObject<ContainerType<ThermContainer>> THERM_CONTAINER = CONTAINERS.register("thermostat", () -> IForgeContainerType.create((windowId, inv, data) -> {
+        BlockPos pos = data.readBlockPos();
+        World world = inv.player.getEntityWorld();
+        return new ThermContainer(windowId, world, pos, inv, inv.player);
+    }));
+    public static final RegistryObject<ContainerType<ValveContainer>> VALVE_CONTAINER = CONTAINERS.register("valve", () -> IForgeContainerType.create((windowId, inv, data) -> {
+        BlockPos pos = data.readBlockPos();
+        World world = inv.player.getEntityWorld();
+        return new ValveContainer(windowId, world, pos, inv, inv.player);
+    }));
+    
 	//Register Items
 	public static final RegistryObject<Item> PROBE_ITEM = ITEMS.register("probe",() -> new ProbeItem());
 	public static final RegistryObject<Item> JUICE_BUCKET_ITEM = ITEMS.register("juice_bucket",() -> new BucketItem(()-> FluidHolder.MOBJUICE_STILL, new Item.Properties().group(ItemGroup.MISC)));

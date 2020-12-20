@@ -11,12 +11,13 @@ import mod.juicy.capability.IBacteriaCapability;
 import mod.juicy.container.ContainerHolder;
 import mod.juicy.gui.GeneratorScreen;
 import mod.juicy.gui.TankScreen;
+import mod.juicy.gui.ThermScreen;
+import mod.juicy.gui.ValveScreen;
 import mod.juicy.item.ItemHolder;
 import mod.juicy.network.PacketHandler;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -66,6 +67,9 @@ public class Juicy
 	private void clientSetup(final FMLClientSetupEvent event) {
 		ScreenManager.registerFactory(ContainerHolder.TANK_CONTAINER, TankScreen::new);
 		ScreenManager.registerFactory(ContainerHolder.GENERATOR_CONTAINER, GeneratorScreen::new);
+		ScreenManager.registerFactory(ContainerHolder.THERM_CONTAINER, ThermScreen::new);
+		ScreenManager.registerFactory(ContainerHolder.VALVE_CONTAINER, ValveScreen::new);
+		
 		Juicy.LOGGER.info("Screens Registered");
 	}
 

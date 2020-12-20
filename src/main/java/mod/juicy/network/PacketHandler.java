@@ -35,6 +35,54 @@ public class PacketHandler {
         .decoder(TankReturnPacket::new)
         .consumer(TankReturnPacket::handle)
         .add();
+        
+        INSTANCE.messageBuilder(GeneratorPacket.class, nextID())
+        .encoder(GeneratorPacket::toBytes)
+        .decoder(GeneratorPacket::new)
+        .consumer(GeneratorPacket::handle)
+        .add();
+        
+        INSTANCE.messageBuilder(GeneratorReturnPacket.class, nextID())
+        .encoder(GeneratorReturnPacket::toBytes)
+        .decoder(GeneratorReturnPacket::new)
+        .consumer(GeneratorReturnPacket::handle)
+        .add();
+        
+        INSTANCE.messageBuilder(ThermPacket.class, nextID())
+        .encoder(ThermPacket::toBytes)
+        .decoder(ThermPacket::new)
+        .consumer(ThermPacket::handle)
+        .add();
+        
+        INSTANCE.messageBuilder(ThermReturnPacket.class, nextID())
+        .encoder(ThermReturnPacket::toBytes)
+        .decoder(ThermReturnPacket::new)
+        .consumer(ThermReturnPacket::handle)
+        .add();
+        
+        INSTANCE.messageBuilder(ThermButtonPacket.class, nextID())
+        .encoder(ThermButtonPacket::toBytes)
+        .decoder(ThermButtonPacket::new)
+        .consumer(ThermButtonPacket::handle)
+        .add();
+        
+        INSTANCE.messageBuilder(ValvePacket.class, nextID())
+        .encoder(ValvePacket::toBytes)
+        .decoder(ValvePacket::new)
+        .consumer(ValvePacket::handle)
+        .add();
+        
+        INSTANCE.messageBuilder(ValveReturnPacket.class, nextID())
+        .encoder(ValveReturnPacket::toBytes)
+        .decoder(ValveReturnPacket::new)
+        .consumer(ValveReturnPacket::handle)
+        .add();
+        
+        INSTANCE.messageBuilder(ValveButtonPacket.class, nextID())
+        .encoder(ValveButtonPacket::toBytes)
+        .decoder(ValveButtonPacket::new)
+        .consumer(ValveButtonPacket::handle)
+        .add();
 	}
 	
 	public static void sendToClient(Object packet, ServerPlayerEntity player) {
