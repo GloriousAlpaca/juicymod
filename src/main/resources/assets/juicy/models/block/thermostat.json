@@ -6,6 +6,7 @@
     "north": "juicy:block/thermostat",
     "south": "juicy:block/thermostat",
     "east": "juicy:block/thermostat",
-    "west": "juicy:block/thermostat"
+    "west": "juicy:block/thermostat",
+	"particle": "juicy:block/tank"
   }
 }

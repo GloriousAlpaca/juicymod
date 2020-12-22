@@ -6,6 +6,7 @@
     "north": "juicy:block/alert",
     "south": "juicy:block/alert",
     "east": "juicy:block/alert",
-    "west": "juicy:block/alert"
+    "west": "juicy:block/alert",
+	"particle": "juicy:block/tank"
   }
 }

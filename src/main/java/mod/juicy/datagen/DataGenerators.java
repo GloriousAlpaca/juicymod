@@ -1,5 +1,7 @@
 package mod.juicy.datagen;
 
+import mod.juicy.datagen.lang.LanguageEnglish;
+import mod.juicy.datagen.lang.LanguageGerman;
 import net.minecraft.data.DataGenerator;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -18,6 +20,8 @@ public class DataGenerators {
         if (event.includeClient()) {
         	generator.addProvider(new BlockStates(generator, event.getExistingFileHelper()));
         	generator.addProvider(new Items(generator, event.getExistingFileHelper()));
+        	generator.addProvider(new LanguageEnglish(generator));
+        	generator.addProvider(new LanguageGerman(generator));
         }
     }
     

@@ -17,6 +17,7 @@ public class AlertTile extends TankSlaveTile{
 	}
 
 	public boolean getPower() {
+		if(controller != null)
 		switch (operator) {
 		case 1:
 			return getValue() < amount;
@@ -29,6 +30,7 @@ public class AlertTile extends TankSlaveTile{
 		default:
 			return false;
 		}
+		return false;
 	}
 
 	/**
@@ -73,6 +75,7 @@ public class AlertTile extends TankSlaveTile{
 	 * @return Current Amount of Juice/Bacteria
 	 */
 	private int getValue() {
+		if(controller != null) {
 		TileEntity tile = world.getTileEntity(controller);
 		if(tile != null)
 			if(tile instanceof TankControllerTile) {
@@ -84,6 +87,8 @@ public class AlertTile extends TankSlaveTile{
 				}
 			}
 		return 0;
+		}
+		return 0;
 	}
 	
 	@Override
@@ -91,8 +96,7 @@ public class AlertTile extends TankSlaveTile{
 		super.read(state, nbt);
 		this.operator = nbt.getInt("operator");
 		this.amount = nbt.getInt("amount");
-		this.mode = nbt.getBoolean("mode");
-			
+		this.mode = nbt.getBoolean("mode");	
 	}
 	
 	@Override

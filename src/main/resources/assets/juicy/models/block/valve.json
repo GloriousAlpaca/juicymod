@@ -6,6 +6,7 @@
     "north": "juicy:block/valve",
     "south": "juicy:block/valve",
     "east": "juicy:block/valve",
-    "west": "juicy:block/valve"
+    "west": "juicy:block/valve",
+	"particle": "juicy:block/tank"
   }
 }

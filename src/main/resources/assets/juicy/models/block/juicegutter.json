@@ -6,6 +6,7 @@
     "north": "juicy:block/gutter_side",
     "south": "juicy:block/gutter_side",
     "east": "juicy:block/gutter_side",
-    "west": "juicy:block/gutter_side"
+    "west": "juicy:block/gutter_side",
+	"particle": "juicy:block/tank"
   }
 }

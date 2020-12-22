@@ -1,6 +1,7 @@
 package mod.juicy.gui;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.platform.GlStateManager;
 
 import mod.juicy.Juicy;
 import mod.juicy.container.AlertContainer;
@@ -56,13 +57,11 @@ public class AlertScreen extends ContainerScreen<AlertContainer>{
         
         ImageButton operatorButton = new ImageButton(x+50, y+36, 18, 14, 176, 0, 15, BACKGROUND_TEXTURE, (btn)->{
         	operator = operator%4+1;
-        	Juicy.LOGGER.info("ICH WURDE GEDRÜCKT!: "+operator);
         });
 		operatorButton.visible = true;
         operatorButton.active = true;
         this.addButton(operatorButton);
-        
-		Button acceptButton = new Button(x + 115, y + 59, 54, 15, new TranslationTextComponent("button.accept"),
+		Button acceptButton = new Button(x + 115, y + 59, 54, 15, new TranslationTextComponent("button.set"),
 				(btn)->PacketHandler.sendToServer(new AlertEditPacket(container.getPos(), operator, Integer.parseInt(textField.getText()), mode)));
 		acceptButton.visible = true;
         acceptButton.active = true;

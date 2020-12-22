@@ -12,6 +12,7 @@ import mod.juicy.block.TankBlock;
 import mod.juicy.capability.BacteriaCapability;
 import mod.juicy.capability.IBacteriaCapability;
 import mod.juicy.capability.JuiceTank;
+import mod.juicy.util.JuicyHelper;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
@@ -30,7 +31,7 @@ public class TankControllerTile extends TileEntity implements ITickableTileEntit
 	static Vector3i[] neighbours = { new Vector3i(1, 0, 0), new Vector3i(-1, 0, 0), new Vector3i(0, 1, 0),
 			new Vector3i(0, -1, 0), new Vector3i(0, 0, 1), new Vector3i(0, 0, -1) };
 	Vector<BlockPos> multiBlock;
-	Vector<AlertTile> alerts;
+	Vector<BlockPos> alerts;
 	
 	IBacteriaCapability bacteria;
 	JuiceTank juice;
@@ -41,7 +42,7 @@ public class TankControllerTile extends TileEntity implements ITickableTileEntit
 		bacteria = new BacteriaCapability(Integer.MAX_VALUE);
 		juice = new JuiceTank(FluidAttributes.BUCKET_VOLUME, 500);
 		multiBlock = new Vector<BlockPos>();
-		alerts = new Vector<AlertTile>();
+		alerts = new Vector<BlockPos>();
 		temperature = 20;
 	}
 
@@ -62,30 +63,27 @@ public class TankControllerTile extends TileEntity implements ITickableTileEntit
 			if(bacteria.getBact()>0) {
 			bacteria.setLimit((int) Math.round(juice.getFluidAmount()*Config.TANK_BPERJ.get()));
 			double newBact = bacteria.growBact(temperature, juice.getFluidAmount());
-			Juicy.LOGGER.info("Bacteria Amount: "+newBact);
 			bacteria.setBact(newBact);
 			int drained = juice.removeFluid(Math.max((int) Math.round(newBact*Config.TANK_GPERB.get()), 1), false);
-			Juicy.LOGGER.info("Juice Drained: "+drained);
 			int bonus = (int) Math.round(Config.TANK_GBONUS.get()*Math.abs(newBact-juice.getFluidAmount()));
-			int added = juice.addGas(drained+bonus, false);
-			Juicy.LOGGER.info("Gas Added: "+added);
-			notifyAlertBlocks();
+			juice.addGas(drained+bonus, false);
+			this.notifyAlertBlocks();
 			this.markDirty();
 			}
 		}
 	}
 
-	public void addAlert(AlertTile pAlert) {
+	public void addAlert(BlockPos pAlert) {
 		this.alerts.add(pAlert);
 	}
 	
-	public void removeAlert(AlertTile pAlert) {
+	public void removeAlert(BlockPos pAlert) {
 		this.alerts.remove(pAlert);
 	}
 	
 	public void notifyAlertBlocks() {
 		if (!alerts.isEmpty()) {
-			alerts.forEach(alert->world.notifyNeighborsOfStateChange(alert.getPos(), BlockHolder.ALERT_BLOCK));
+			alerts.forEach(alert->world.notifyNeighborsOfStateChange(alert, BlockHolder.ALERT_BLOCK));
 		}
 	}
 	
@@ -191,13 +189,10 @@ public class TankControllerTile extends TileEntity implements ITickableTileEntit
 		super.read(state, nbt);
 		BacteriaCapability.BACT_CAPABILITY.readNBT(bacteria, null, nbt.get("bacteria"));
 		juice.readFromNBT((CompoundNBT) nbt.get("juice"));
-		int[] multiX = nbt.getIntArray("multiblockx");
-		int[] multiY = nbt.getIntArray("multiblocky");
-		int[] multiZ = nbt.getIntArray("multiblockz");
-		multiBlock = new Vector<BlockPos>();
-		for(int i=0;i<multiX.length;i++) {
-			multiBlock.add(new BlockPos(multiX[i], multiY[i], multiZ[i]));
-		}
+		int[][] multiBlockArray = {nbt.getIntArray("multiblockx"), nbt.getIntArray("multiblocky"), nbt.getIntArray("multiblockz")};
+		this.multiBlock = JuicyHelper.posArraytoVector(multiBlockArray);
+		int[][] alertArray = {nbt.getIntArray("alertsX"), nbt.getIntArray("alertsY"), nbt.getIntArray("alertsZ")};
+		this.alerts = JuicyHelper.posArraytoVector(alertArray);
 	}
 
 	@Override
@@ -205,17 +200,14 @@ public class TankControllerTile extends TileEntity implements ITickableTileEntit
 		CompoundNBT nbt = super.write(compound);
 		nbt.put("bacteria",BacteriaCapability.BACT_CAPABILITY.writeNBT(bacteria, null));
 		nbt.put("juice",juice.writeToNBT(new CompoundNBT()));
-		int[] multiX = new int[multiBlock.size()];
-		int[] multiY = new int[multiBlock.size()];
-		int[] multiZ = new int[multiBlock.size()];
-		for(int i=0;i<multiBlock.size();i++) {
-			multiX[i] = multiBlock.get(i).getX();
-			multiY[i] = multiBlock.get(i).getY();
-			multiZ[i] = multiBlock.get(i).getZ();
-		}
-		nbt.putIntArray("multiblockx", multiX);
-		nbt.putIntArray("multiblocky", multiY);
-		nbt.putIntArray("multiblockz", multiZ);
+		int[][] multiBlockArray = JuicyHelper.posVectorToArray(multiBlock);
+		nbt.putIntArray("multiblockx", multiBlockArray[0]);
+		nbt.putIntArray("multiblocky", multiBlockArray[1]);
+		nbt.putIntArray("multiblockz", multiBlockArray[2]);
+		int[][] alertArray = JuicyHelper.posVectorToArray(alerts);
+		nbt.putIntArray("alertsX", alertArray[0]);
+		nbt.putIntArray("alertsY", alertArray[1]);
+		nbt.putIntArray("alertsZ", alertArray[2]);
 		return nbt;
 	}
 

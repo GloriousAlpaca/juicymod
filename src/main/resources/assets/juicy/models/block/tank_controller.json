@@ -6,6 +6,7 @@
     "north": "juicy:block/tank_controller",
     "south": "juicy:block/tank_controller",
     "east": "juicy:block/tank_controller",
-    "west": "juicy:block/tank_controller"
+    "west": "juicy:block/tank_controller",
+	"particle": "juicy:block/tank"
   }
 }

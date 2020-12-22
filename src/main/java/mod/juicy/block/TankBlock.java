@@ -98,6 +98,7 @@ public class TankBlock extends Block {
 							marked.remove(pos);
 							controller.setMultiBlock(marked);
 							controller.updateCapacity();
+							controller.markDirty();
 							oldMulti.removeAll(marked);
 							oldMulti.remove(controllerPos);
 							oldMulti.forEach(slavepos -> {

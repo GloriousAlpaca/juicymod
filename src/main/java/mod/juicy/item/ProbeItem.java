@@ -7,7 +7,9 @@ import javax.annotation.Nullable;
 import mod.juicy.Juicy;
 import mod.juicy.capability.BacteriaCapability;
 import mod.juicy.capability.IBacteriaCapability;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -17,6 +19,7 @@ import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.LazyOptional;
@@ -33,11 +36,12 @@ public class ProbeItem extends Item{
 	public ActionResultType onItemUse(ItemUseContext context) {
 		if(!context.getWorld().isRemote())
 		{
-			if(context.getWorld().getBlockState(context.getPos()).getBlock().getRegistryName().toString().contains("kelp")) {
+			Block lookingAt = context.getWorld().getBlockState(context.getPos()).getBlock();
+			if(lookingAt.equals(Blocks.KELP_PLANT) || lookingAt.equals(Blocks.KELP)) {
 				LazyOptional<IBacteriaCapability> capability = context.getItem().getCapability(BacteriaCapability.BACT_CAPABILITY, null);
 				capability.ifPresent(cap->{
-					cap.receiveBact(Math.round(Math.random()*5), false);
-					Juicy.LOGGER.info("Bacteria: " + cap.getBact());
+					if(cap.getBact()<1.)
+					cap.receiveBact(Math.round(Math.random()*30), false);
 				});
 				return ActionResultType.SUCCESS;
 			}
@@ -56,7 +60,10 @@ public class ProbeItem extends Item{
 	@Override
 	public void addInformation(ItemStack stack, @Nullable World worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
 		LazyOptional<IBacteriaCapability> cap = stack.getCapability(BacteriaCapability.BACT_CAPABILITY, null);
-		cap.ifPresent(cap1 -> tooltip.add(new TranslationTextComponent("information.probeitem").appendString(Long.toString(Math.round(cap1.getBact())))));
+		cap.ifPresent(cap1 ->{ 
+		tooltip.add(new TranslationTextComponent("information.probeitem"));
+		tooltip.add(new StringTextComponent(Long.toString(Math.round(cap1.getBact()))));
+			});
 	}
 	
 	
@@ -67,10 +74,14 @@ public class ProbeItem extends Item{
 	
 	@Override
 	public CompoundNBT getShareTag(ItemStack stack) {
-		CompoundNBT nbt = super.getShareTag(stack);
-		if(nbt != null)
-		stack.getCapability(BacteriaCapability.BACT_CAPABILITY, null).ifPresent(cap->nbt.put("bacteria", BacteriaCapability.BACT_CAPABILITY.writeNBT(cap, null)));
-		return nbt;
+		CompoundNBT nbt1 = super.getShareTag(stack);
+		CompoundNBT nbt2;
+		if(nbt1 != null)
+			nbt2 = nbt1;
+		else
+			nbt2 = new CompoundNBT();
+		stack.getCapability(BacteriaCapability.BACT_CAPABILITY, null).ifPresent(cap -> nbt2.put("bacteria", BacteriaCapability.BACT_CAPABILITY.writeNBT(cap, null)));
+		return nbt2;
 	}
 	
 	@Override

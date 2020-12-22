@@ -58,7 +58,7 @@ public class AlertBlock extends TankBlock{
 					if(((AlertTile) tile).getController() != null) {
 					TankControllerTile controller = (TankControllerTile) worldIn.getTileEntity(((AlertTile) tile).getController());
 					if(controller != null) {
-						controller.addAlert((AlertTile) tile);
+						controller.addAlert(pos);
 					}
 					}
 				}		
@@ -75,7 +75,7 @@ public class AlertBlock extends TankBlock{
 					if (((AlertTile) tile).getController() != null) {
 						TankControllerTile controller = (TankControllerTile) worldIn.getTileEntity(((AlertTile) tile).getController());
 						if (controller != null) {
-							controller.removeAlert((AlertTile) tile);
+							controller.removeAlert(pos);
 						}
 					}
 				}

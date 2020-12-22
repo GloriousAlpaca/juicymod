@@ -1,5 +1,7 @@
 package mod.juicy.util;
 
+import java.util.Vector;
+
 import mod.juicy.tile.TankControllerTile;
 import mod.juicy.tile.TankSlaveTile;
 import net.minecraft.tileentity.TileEntity;
@@ -28,4 +30,24 @@ public class JuicyHelper {
 		return LazyOptional.empty();
 	}
 	
+	public static int[][] posVectorToArray(Vector<BlockPos> pVector) {
+		int[] vectX = new int[pVector.size()];
+		int[] vectY = new int[pVector.size()];
+		int[] vectZ = new int[pVector.size()];
+		for(int i=0;i<pVector.size();i++) {
+			vectX[i] = pVector.get(i).getX();
+			vectY[i] = pVector.get(i).getY();
+			vectZ[i] = pVector.get(i).getZ();
+		}
+		int[][] outarray = {vectX,vectY,vectZ};
+		return outarray;
+	}
+	
+	public static Vector<BlockPos> posArraytoVector(int[][] pArray){
+		Vector<BlockPos> vect = new Vector<BlockPos>();
+		for(int i=0;i<pArray[0].length;i++) {
+			vect.add(new BlockPos(pArray[0][i], pArray[1][i], pArray[2][i]));
+		}
+		return vect;
+	}
 }

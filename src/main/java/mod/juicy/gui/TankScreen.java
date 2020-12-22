@@ -14,6 +14,7 @@ import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 
 public class TankScreen extends ContainerScreen<TankContainer>{
 	private static final ResourceLocation BACKGROUND_TEXTURE = new ResourceLocation(Juicy.MODID, "textures/gui/tank_gui.png");
@@ -60,6 +61,14 @@ public class TankScreen extends ContainerScreen<TankContainer>{
 		drawString(matrixStack, Minecraft.getInstance().fontRenderer, Integer.toString(intake), 8, 21, 0xffffff);
 		//Temp Number
 		drawString(matrixStack, Minecraft.getInstance().fontRenderer, Double.toString(temp), 8, 47, 0xffffff);
+		matrixStack.push();
+		float scale2 = 0.75f;
+		matrixStack.scale(scale, scale, scale);
+		//Intake Title
+		drawString(matrixStack, Minecraft.getInstance().fontRenderer, new TranslationTextComponent("title.intake"), Math.round(7/scale2)+1, Math.round(30/scale2)+1, 0xffffff);
+		//Temp Title
+		drawString(matrixStack, Minecraft.getInstance().fontRenderer, new TranslationTextComponent("title.temp"), Math.round(7/scale2)+1, Math.round(56/scale2)+1, 0xffffff);
+		matrixStack.pop();
 	}
 
 	@Override

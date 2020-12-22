@@ -48,6 +48,7 @@ public class Juicy
 	};
 	
     public Juicy() {
+    	Juicy.LOGGER.info("Get ready for some juicy content!");
     	//Add Serverside Config
     	ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, Config.SERVER_CONFIG);
         // Register the setup method for modloading
@@ -71,7 +72,6 @@ public class Juicy
 		ScreenManager.registerFactory(ContainerHolder.THERM_CONTAINER, ThermScreen::new);
 		ScreenManager.registerFactory(ContainerHolder.VALVE_CONTAINER, ValveScreen::new);
 		ScreenManager.registerFactory(ContainerHolder.ALERT_CONTAINER, AlertScreen::new);
-		
 		Juicy.LOGGER.info("Screens Registered");
 	}
 

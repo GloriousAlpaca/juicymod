@@ -1,0 +1,34 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "GED",
+    "#H#",
+    "OLO"
+  ],
+  "key": {
+    "#": {
+      "item": "juicy:plate"
+    },
+    "H": {
+      "item": "minecraft:heart_of_the_sea"
+    },
+    "O": {
+      "item": "minecraft:obsidian"
+    },
+    "G": {
+      "item": "minecraft:gold_ingot"
+    },
+    "E": {
+      "item": "minecraft:emerald"
+    },
+    "D": {
+      "item": "minecraft:diamond"
+    },
+    "L": {
+      "item": "minecraft:sea_lantern"
+    }
+  },
+  "result": {
+    "item": "juicy:tank_controller"
+  }
+}
