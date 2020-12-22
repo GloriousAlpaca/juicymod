@@ -15,7 +15,6 @@ import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
 import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
@@ -33,7 +32,7 @@ import net.minecraftforge.fml.network.NetworkHooks;
 public class GeneratorBlock extends Block{
 
 	public GeneratorBlock() {
-		super(AbstractBlock.Properties.create(Material.IRON).hardnessAndResistance(1.5f, 7f).harvestLevel(1).harvestTool(ToolType.PICKAXE).sound(SoundType.METAL));
+		super(AbstractBlock.Properties.create(Material.IRON).hardnessAndResistance(1.5f, 1000f).harvestLevel(2).harvestTool(ToolType.PICKAXE).setRequiresTool().sound(SoundType.METAL));
 	}
 
 	@Override

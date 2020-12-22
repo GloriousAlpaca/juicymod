@@ -166,13 +166,10 @@ public class JuiceTank extends FluidTank {
 
 	@Override
 	public CompoundNBT writeToNBT(CompoundNBT nbt) {
-		Juicy.LOGGER.info("WRITE NBT JUICETANK!-----------------------------------------------------------------------------------------------------------");
 		nbt.put("fluid", fluid.writeToNBT(new CompoundNBT()));
 		nbt.put("gas", gas.writeToNBT(new CompoundNBT()));
 		nbt.putInt("fluidcap", capacity);
 		nbt.putInt("gascap", gascapacity);
-		Juicy.LOGGER.info("WRITE NBT FLUID: "+fluid.getDisplayName()+fluid.getAmount());
-		Juicy.LOGGER.info("WRITE NBT GAS: "+gas.getDisplayName()+gas.getAmount());
 		nbt.putInt("intake", intake);
 		return nbt;
 	}

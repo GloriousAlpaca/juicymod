@@ -9,6 +9,8 @@
   "button.bacteria": "Bakterien",
   "button.juice": "Saft",
   "button.set": "Setzen",
+  "fluid.juicy.mobgas_still": "Mob Gas",
+  "fluid.juicy.mobjuice_still": "Mob Saft",
   "information.probeitem": "Bakterien: ",
   "item.juicy.juice_bucket": "Saft Eimer",
   "item.juicy.plate": "Rostfeste Platte",

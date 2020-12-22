@@ -9,6 +9,8 @@
   "button.bacteria": "Bacteria",
   "button.juice": "Juice",
   "button.set": "Set",
+  "fluid.juicy.mobgas_still": "Mob Gas",
+  "fluid.juicy.mobjuice_still": "Mob Juice",
   "information.probeitem": "Bacteria: ",
   "item.juicy.juice_bucket": "Juice Bucket",
   "item.juicy.plate": "Corrosion-Proof Plate",

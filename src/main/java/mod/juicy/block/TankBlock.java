@@ -40,7 +40,7 @@ import net.minecraftforge.fml.network.NetworkHooks;
 public class TankBlock extends Block {
     
 	public TankBlock() {
-		super(AbstractBlock.Properties.create(Material.IRON).hardnessAndResistance(1.5f, 7f).harvestLevel(1).harvestTool(ToolType.PICKAXE)
+		super(AbstractBlock.Properties.create(Material.IRON).hardnessAndResistance(1.5f, 1000f).harvestLevel(2).harvestTool(ToolType.PICKAXE).setRequiresTool()
 				.sound(SoundType.METAL));
 	}
 

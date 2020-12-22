@@ -18,5 +18,6 @@ public class BlockLoot extends BaseLootTableProvider{
 		lootTables.put(BlockHolder.TANK_CONTROLLER_BLOCK, simpleBlockTable("tank_controller", BlockHolder.TANK_CONTROLLER_BLOCK));
 		lootTables.put(BlockHolder.THERM_BLOCK, simpleBlockTable("thermostat", BlockHolder.THERM_BLOCK));
 		lootTables.put(BlockHolder.VALVE_BLOCK, simpleBlockTable("valve", BlockHolder.VALVE_BLOCK));
+		
 	}
 }

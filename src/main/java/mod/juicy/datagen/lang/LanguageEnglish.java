@@ -22,6 +22,8 @@ public class LanguageEnglish extends LanguageProvider{
 		addBlock(()->BlockHolder.TANK_CONTROLLER_BLOCK, "Fermentation Tank Controller");
 		addBlock(()->BlockHolder.THERM_BLOCK, "Thermostat Block");
 		addBlock(()->BlockHolder.VALVE_BLOCK, "Valve Block");
+		addFluid("mobjuice", "Mob Juice");
+		addFluid("mobgas", "Mob Gas");
 		addItem(()->ItemHolder.JUICE_BUCKET, "Juice Bucket");
 		addItem(()->ItemHolder.PROBE, "Bacteria Probe");
 		addItem(()->ItemHolder.PLATE, "Corrosion-Proof Plate");
@@ -41,5 +43,9 @@ public class LanguageEnglish extends LanguageProvider{
 
 	public void addScreen(String identifier, String name){
 		add("screen.juicy."+identifier, name);
+	}
+	
+	public void addFluid(String identifier, String name) {
+		add("fluid.juicy."+identifier+"_still", name);
 	}
 }

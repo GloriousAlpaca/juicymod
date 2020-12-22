@@ -22,6 +22,8 @@ public class LanguageGerman extends LanguageProvider{
 		addBlock(()->BlockHolder.TANK_CONTROLLER_BLOCK, "Tank-Steuerungs Block");
 		addBlock(()->BlockHolder.THERM_BLOCK, "Thermostat Block");
 		addBlock(()->BlockHolder.VALVE_BLOCK, "Ventil Block");
+		addFluid("mobjuice", "Mob Saft");
+		addFluid("mobgas", "Mob Gas");
 		addItem(()->ItemHolder.JUICE_BUCKET, "Saft Eimer");
 		addItem(()->ItemHolder.PROBE, "Bakterien-Pipette");
 		addItem(()->ItemHolder.PLATE, "Rostfeste Platte");
@@ -43,4 +45,7 @@ public class LanguageGerman extends LanguageProvider{
 		add("screen.juicy."+identifier, name);
 	}
 	
+	public void addFluid(String identifier, String name) {
+		add("fluid.juicy."+identifier+"_still", name);
+	}
 }
