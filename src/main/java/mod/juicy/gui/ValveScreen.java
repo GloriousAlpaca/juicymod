@@ -52,7 +52,7 @@ public class ValveScreen extends ContainerScreen<ValveContainer>{
         this.setFocusedDefault(textFieldHigh);
         this.children.add(textFieldLow);
         
-		Button button = new Button(x + 133, y + 69, 36, 10, new TranslationTextComponent("button.set"),
+		Button button = new Button(x + 133, y + 68, 36, 11, new TranslationTextComponent("button.set"),
 				(btn) -> PacketHandler.sendToServer(new ValveButtonPacket(container.getPos(),
 						Integer.parseInt(textFieldHigh.getText()), Integer.parseInt(textFieldLow.getText()))));
 		button.visible = true;
@@ -64,6 +64,7 @@ public class ValveScreen extends ContainerScreen<ValveContainer>{
 	public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         this.renderBackground(matrixStack);
 		super.render(matrixStack, mouseX, mouseY, partialTicks);
+		this.renderHoveredTooltip(matrixStack, mouseX, mouseY);
 		this.textFieldHigh.render(matrixStack, mouseX, mouseY, partialTicks);
 		this.textFieldLow.render(matrixStack, mouseX, mouseY, partialTicks);
 	}

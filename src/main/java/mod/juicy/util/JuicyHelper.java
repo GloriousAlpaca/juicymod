@@ -19,9 +19,11 @@ public class JuicyHelper {
 			return LazyOptional.of(()->(TankControllerTile) tile);
 		}
 		else if(tile instanceof TankSlaveTile) {
+			if(((TankSlaveTile) tile).getController() != null) {
 			TankControllerTile controllerTile = (TankControllerTile) worldIn.getTileEntity(((TankSlaveTile) tile).getController());
 			if(controllerTile != null)
 				return LazyOptional.of(()->controllerTile);
+			}
 		}
 		return LazyOptional.empty();
 	}

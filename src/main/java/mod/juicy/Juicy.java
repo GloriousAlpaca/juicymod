@@ -9,6 +9,7 @@ import mod.juicy.capability.BacteriaFactory;
 import mod.juicy.capability.BacteriaStorage;
 import mod.juicy.capability.IBacteriaCapability;
 import mod.juicy.container.ContainerHolder;
+import mod.juicy.gui.AlertScreen;
 import mod.juicy.gui.GeneratorScreen;
 import mod.juicy.gui.TankScreen;
 import mod.juicy.gui.ThermScreen;
@@ -69,6 +70,7 @@ public class Juicy
 		ScreenManager.registerFactory(ContainerHolder.GENERATOR_CONTAINER, GeneratorScreen::new);
 		ScreenManager.registerFactory(ContainerHolder.THERM_CONTAINER, ThermScreen::new);
 		ScreenManager.registerFactory(ContainerHolder.VALVE_CONTAINER, ValveScreen::new);
+		ScreenManager.registerFactory(ContainerHolder.ALERT_CONTAINER, AlertScreen::new);
 		
 		Juicy.LOGGER.info("Screens Registered");
 	}

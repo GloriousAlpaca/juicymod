@@ -1,0 +1,11 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "down": "juicy:block/base_bottom",
+    "up": "juicy:block/generator_top",
+    "north": "juicy:block/generator_back",
+    "south": "juicy:block/generator_back",
+    "east": "juicy:block/generator_side1",
+    "west": "juicy:block/generator_side2"
+  }
+}

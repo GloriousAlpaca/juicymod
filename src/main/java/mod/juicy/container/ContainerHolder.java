@@ -18,4 +18,7 @@ public class ContainerHolder {
 	
 	@ObjectHolder ("valve")
     public static ContainerType<ValveContainer> VALVE_CONTAINER = null;
+	
+	@ObjectHolder ("alert")
+    public static ContainerType<AlertContainer> ALERT_CONTAINER = null;
 }

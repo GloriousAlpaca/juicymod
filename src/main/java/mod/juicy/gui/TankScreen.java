@@ -23,6 +23,8 @@ public class TankScreen extends ContainerScreen<TankContainer>{
 	public static int juiceCap;
 	public static int bacteria;
 	public static int bacteriaCap;
+	public static int intake;
+	public static double temp;
 	
 	public TankScreen(TankContainer screenContainer, PlayerInventory inv, ITextComponent titleIn) {
 		super(screenContainer, inv, titleIn);
@@ -54,6 +56,10 @@ public class TankScreen extends ContainerScreen<TankContainer>{
 		//Bacterianumber
 		drawString(matrixStack, Minecraft.getInstance().fontRenderer, Integer.toString(bacteria), Math.round(145/scale)+1, Math.round(63/scale)+1, 0xffffff);
 		matrixStack.pop();
+		//Intake Number
+		drawString(matrixStack, Minecraft.getInstance().fontRenderer, Integer.toString(intake), 8, 21, 0xffffff);
+		//Temp Number
+		drawString(matrixStack, Minecraft.getInstance().fontRenderer, Double.toString(temp), 8, 47, 0xffffff);
 	}
 
 	@Override

@@ -1,6 +1,6 @@
 {
   "parent": "block/cube_all",
   "textures": {
-    "all": "juicy:block/placeholder2"
+    "all": "juicy:block/tank"
   }
 }

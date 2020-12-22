@@ -32,6 +32,7 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.World;
+import net.minecraftforge.common.ToolType;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fml.network.NetworkHooks;
@@ -39,7 +40,7 @@ import net.minecraftforge.fml.network.NetworkHooks;
 public class TankBlock extends Block {
     
 	public TankBlock() {
-		super(AbstractBlock.Properties.create(Material.IRON).hardnessAndResistance(1.5f, 7f).harvestLevel(1)
+		super(AbstractBlock.Properties.create(Material.IRON).hardnessAndResistance(1.5f, 7f).harvestLevel(1).harvestTool(ToolType.PICKAXE)
 				.sound(SoundType.METAL));
 	}
 
@@ -85,22 +86,28 @@ public class TankBlock extends Block {
 				if (tile instanceof TankControllerTile) {
 					((TankControllerTile) tile).renounceController();
 				} else {
-					// TODO Fix Nullpointer and Multiblock structure
-					TankControllerTile controller = (TankControllerTile) worldIn.getTileEntity(((TankSlaveTile) tile).getController());
-					Vector<BlockPos> oldMulti = controller.getMultiBlock();
-					Vector<BlockPos> marked = new Vector<BlockPos>();
-					marked.add(pos);
-					controller.searchMultiBlock(marked);
-					marked.remove(pos);
-					controller.setMultiBlock(marked);
-					controller.updateCapacity();
-					oldMulti.removeAll(marked);
-					oldMulti.forEach(slavepos->{
-						TileEntity slave = worldIn.getTileEntity(slavepos);
-						if(tile != null)
-							if(tile instanceof TankSlaveTile)
-								((TankSlaveTile) slave).setController(null);
-					});
+					// TODO Fix Multiblock structure
+					BlockPos controllerPos = ((TankSlaveTile) tile).getController();
+					if (controllerPos != null) {
+						TankControllerTile controller = (TankControllerTile) worldIn.getTileEntity(controllerPos);
+						if (controller != null) {
+							Vector<BlockPos> oldMulti = controller.getMultiBlock();
+							Vector<BlockPos> marked = new Vector<BlockPos>();
+							marked.add(pos);
+							controller.searchMultiBlock(marked);
+							marked.remove(pos);
+							controller.setMultiBlock(marked);
+							controller.updateCapacity();
+							oldMulti.removeAll(marked);
+							oldMulti.remove(controllerPos);
+							oldMulti.forEach(slavepos -> {
+								TileEntity slave = worldIn.getTileEntity(slavepos);
+								if (slave != null)
+									if (slave instanceof TankSlaveTile)
+										((TankSlaveTile) slave).setController(null);
+							});
+						}
+					}
 				}
 			}
 		}
@@ -134,7 +141,8 @@ public class TankBlock extends Block {
 			
 			if (!worldIn.isRemote) {
 				TileEntity tile = worldIn.getTileEntity(pos);
-				if (tile != null) {
+				if (tile != null)
+					if(JuicyHelper.getController(pos, worldIn).isPresent()) {
 					INamedContainerProvider containerProvider = new INamedContainerProvider() {
 						@Override
 						public ITextComponent getDisplayName() {

@@ -16,6 +16,8 @@ public class TankReturnPacket {
 	int juiceCap;
 	int bacteria;
 	int bacteriaCap;
+	int intake;
+	double temp;
 	
 	public TankReturnPacket(PacketBuffer buf) {
 		this.gas = buf.readInt();
@@ -24,6 +26,8 @@ public class TankReturnPacket {
 		this.juiceCap = buf.readInt();
 		this.bacteria = buf.readInt();
 		this.bacteriaCap = buf.readInt();
+		this.intake = buf.readInt();
+		this.temp = buf.readDouble();
 	}
 
 	public TankReturnPacket(TankControllerTile controller) {
@@ -33,6 +37,8 @@ public class TankReturnPacket {
 		this.juiceCap = controller.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY).map(tank->tank.getTankCapacity(1)).orElse(0);
 		this.bacteria = (int) Math.round(controller.getCapability(BacteriaCapability.BACT_CAPABILITY).map(bact->bact.getBact()).orElse(0.));
 		this.bacteriaCap = controller.getCapability(BacteriaCapability.BACT_CAPABILITY).map(bact->bact.getLimit()).orElse(0);
+		this.intake = controller.getFlow();
+		this.temp = controller.getTemp();
 	}
 	
 	public void toBytes(PacketBuffer buf) {
@@ -42,6 +48,8 @@ public class TankReturnPacket {
 		buf.writeInt(this.juiceCap);
 		buf.writeInt(this.bacteria);
 		buf.writeInt(this.bacteriaCap);
+		buf.writeInt(this.intake);
+		buf.writeDouble(this.temp);
 	}
 	
 	public boolean handle(Supplier<NetworkEvent.Context> ctx) {
@@ -52,6 +60,8 @@ public class TankReturnPacket {
 			TankScreen.juiceCap = this.juiceCap;
 			TankScreen.bacteria = this.bacteria;
 			TankScreen.bacteriaCap = this.bacteriaCap;
+			TankScreen.intake = this.intake;
+			TankScreen.temp = this.temp;
 		});
 		return true;
 	}

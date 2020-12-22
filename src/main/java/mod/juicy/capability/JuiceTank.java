@@ -100,7 +100,7 @@ public class JuiceTank extends FluidTank {
 	}
 
 	public int addGas(int amount, boolean simulate) {
-			int added = Math.min(this.gas.getAmount()+amount, gascapacity-this.gas.getAmount());
+			int added = Math.min(amount, gascapacity-this.gas.getAmount());
 			if(!simulate)
 			this.gas = new FluidStack(FluidHolder.MOBGAS_STILL, gas.getAmount()+added);
 			return added;
@@ -146,6 +146,10 @@ public class JuiceTank extends FluidTank {
 	
 	public void setIntake(int pIntake) {
 		this.intake = pIntake;
+	}
+	
+	public int getIntake() {
+		return intake;
 	}
 	
 	@Override

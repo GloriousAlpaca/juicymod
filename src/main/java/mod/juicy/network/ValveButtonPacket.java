@@ -37,8 +37,8 @@ public class ValveButtonPacket {
         ctx.get().enqueueWork(()-> {
         	World serverWorld = ctx.get().getSender().getServerWorld();
         	TileEntity tile = serverWorld.getTileEntity(pos);
-        	if(tile != null) {
-        		if(tile instanceof ValveTile)
+        	if(tile != null)
+        		if(tile instanceof ValveTile) {
         		((ValveTile) tile).setHigh(high);
         		((ValveTile) tile).setLow(low);
         	}

@@ -24,4 +24,7 @@ public class BlockHolder {
 	
 	@ObjectHolder("generator")
 	public static final Block GENERATOR_BLOCK = null;
+	
+	@ObjectHolder("alert")
+	public static final Block ALERT_BLOCK = null;
 }

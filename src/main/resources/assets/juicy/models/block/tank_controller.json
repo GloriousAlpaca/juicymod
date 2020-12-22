@@ -1,6 +1,11 @@
 {
-  "parent": "block/cube_all",
+  "parent": "block/cube",
   "textures": {
-    "all": "juicy:block/placeholder"
+    "down": "juicy:block/tank",
+    "up": "juicy:block/tank_controller_top",
+    "north": "juicy:block/tank_controller",
+    "south": "juicy:block/tank_controller",
+    "east": "juicy:block/tank_controller",
+    "west": "juicy:block/tank_controller"
   }
 }

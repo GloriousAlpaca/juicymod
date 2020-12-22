@@ -1,0 +1,11 @@
+{
+  "parent": "block/cube",
+  "textures": {
+    "down": "juicy:block/base_bottom",
+    "up": "juicy:block/valve_top",
+    "north": "juicy:block/valve",
+    "south": "juicy:block/valve",
+    "east": "juicy:block/valve",
+    "west": "juicy:block/valve"
+  }
+}

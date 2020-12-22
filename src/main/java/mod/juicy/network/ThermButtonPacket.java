@@ -36,8 +36,8 @@ public class ThermButtonPacket {
         ctx.get().enqueueWork(()-> {
         	World serverWorld = ctx.get().getSender().getServerWorld();
         	TileEntity tile = serverWorld.getTileEntity(pos);
-        	if(tile != null) {
-        		if(tile instanceof ThermTile)
+        	if(tile != null)
+        		if(tile instanceof ThermTile) {
         		((ThermTile) tile).setHigh(high);
         		((ThermTile) tile).setLow(low);
         	}

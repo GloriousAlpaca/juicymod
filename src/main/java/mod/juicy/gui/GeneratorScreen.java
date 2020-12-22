@@ -58,7 +58,7 @@ public class GeneratorScreen extends ContainerScreen<GeneratorContainer>{
 		int x = (this.width - this.xSize) / 2;
 		int y = (this.height - this.ySize) / 2;
 		this.blit(matrixStack, x, y, 0, 0, this.xSize, this.ySize);
-		int g = Math.round(1f*170f);
+		int g = Math.round((float)gas/(float)Config.GENERATOR_GASCAP.get()*170f);
 		int e = Math.round((float)energy/(float)Config.GENERATOR_ENERGYCAP.get()*170f);
 		this.blit(matrixStack, x+12, y+23, 0, 166, g, 12);
 		this.blit(matrixStack, x+12, y+57, 0, 178, e, 12);

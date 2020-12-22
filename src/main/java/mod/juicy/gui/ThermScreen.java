@@ -7,6 +7,7 @@ import mod.juicy.container.ThermContainer;
 import mod.juicy.network.PacketHandler;
 import mod.juicy.network.ThermButtonPacket;
 import mod.juicy.network.ThermPacket;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.button.Button;
@@ -49,7 +50,7 @@ public class ThermScreen extends ContainerScreen<ThermContainer>{
         this.setFocusedDefault(textFieldHigh);
         this.children.add(textFieldLow);
         
-		Button button = new Button(x + 133, y + 69, 36, 10, new TranslationTextComponent("button.set"),
+		Button button = new Button(x + 133, y + 68, 36, 11, new TranslationTextComponent("button.set"),
 				(btn) -> PacketHandler.sendToServer(new ThermButtonPacket(container.getPos(),
 						Double.parseDouble(textFieldHigh.getText()), Double.parseDouble(textFieldLow.getText()))));
 		button.visible = true;
@@ -61,6 +62,7 @@ public class ThermScreen extends ContainerScreen<ThermContainer>{
 	public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         this.renderBackground(matrixStack);
 		super.render(matrixStack, mouseX, mouseY, partialTicks);
+		this.renderHoveredTooltip(matrixStack, mouseX, mouseY);
 		this.textFieldHigh.render(matrixStack, mouseX, mouseY, partialTicks);
 		this.textFieldLow.render(matrixStack, mouseX, mouseY, partialTicks);
 	}

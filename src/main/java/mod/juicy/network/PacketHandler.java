@@ -83,6 +83,24 @@ public class PacketHandler {
         .decoder(ValveButtonPacket::new)
         .consumer(ValveButtonPacket::handle)
         .add();
+        
+        INSTANCE.messageBuilder(AlertPacket.class, nextID())
+        .encoder(AlertPacket::toBytes)
+        .decoder(AlertPacket::new)
+        .consumer(AlertPacket::handle)
+        .add();
+        
+        INSTANCE.messageBuilder(AlertReturnPacket.class, nextID())
+        .encoder(AlertReturnPacket::toBytes)
+        .decoder(AlertReturnPacket::new)
+        .consumer(AlertReturnPacket::handle)
+        .add();
+        
+        INSTANCE.messageBuilder(AlertEditPacket.class, nextID())
+        .encoder(AlertEditPacket::toBytes)
+        .decoder(AlertEditPacket::new)
+        .consumer(AlertEditPacket::handle)
+        .add();
 	}
 	
 	public static void sendToClient(Object packet, ServerPlayerEntity player) {

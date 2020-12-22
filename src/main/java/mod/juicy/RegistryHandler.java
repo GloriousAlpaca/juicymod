@@ -2,6 +2,7 @@ package mod.juicy;
 
 import static mod.juicy.Juicy.MODID;
 
+import mod.juicy.block.AlertBlock;
 import mod.juicy.block.BlockHolder;
 import mod.juicy.block.GeneratorBlock;
 import mod.juicy.block.GutterBlock;
@@ -9,6 +10,7 @@ import mod.juicy.block.TankBlock;
 import mod.juicy.block.TankControllerBlock;
 import mod.juicy.block.ThermBlock;
 import mod.juicy.block.ValveBlock;
+import mod.juicy.container.AlertContainer;
 import mod.juicy.container.GeneratorContainer;
 import mod.juicy.container.TankContainer;
 import mod.juicy.container.ThermContainer;
@@ -16,6 +18,7 @@ import mod.juicy.container.ValveContainer;
 import mod.juicy.fluid.FluidHolder;
 import mod.juicy.item.ItemHolder;
 import mod.juicy.item.ProbeItem;
+import mod.juicy.tile.AlertTile;
 import mod.juicy.tile.GeneratorTile;
 import mod.juicy.tile.GutterTile;
 import mod.juicy.tile.TankControllerTile;
@@ -79,6 +82,7 @@ public class RegistryHandler {
 	public static final RegistryObject<Block> THERM_BLOCK = BLOCKS.register("thermostat", ()-> new ThermBlock());
 	public static final RegistryObject<Block> VALVE_BLOCK = BLOCKS.register("valve", ()-> new ValveBlock());
 	public static final RegistryObject<Block> GENERATOR_BLOCK = BLOCKS.register("generator", ()-> new GeneratorBlock());
+	public static final RegistryObject<Block> ALERT_BLOCK = BLOCKS.register("alert", ()-> new AlertBlock());
 	
 	//Register Tile Entity Types
 	public static final RegistryObject<TileEntityType<?>> TANK_CONTROLLER_TILE = TILES.register("tank_controller", () -> TileEntityType.Builder.create(() -> new TankControllerTile(), BlockHolder.TANK_CONTROLLER_BLOCK).build(null));
@@ -87,8 +91,10 @@ public class RegistryHandler {
 	public static final RegistryObject<TileEntityType<?>> THERM_TILE = TILES.register("thermostat", () -> TileEntityType.Builder.create(() -> new ThermTile(), BlockHolder.THERM_BLOCK).build(null));
 	public static final RegistryObject<TileEntityType<?>> VALVE_TILE = TILES.register("valve", () -> TileEntityType.Builder.create(() -> new ValveTile(), BlockHolder.VALVE_BLOCK).build(null));
 	public static final RegistryObject<TileEntityType<?>> GENERATOR_TILE = TILES.register("generator", () -> TileEntityType.Builder.create(() -> new GeneratorTile(), BlockHolder.GENERATOR_BLOCK).build(null));
+	public static final RegistryObject<TileEntityType<?>> ALERT_TILE = TILES.register("alert", () -> TileEntityType.Builder.create(() -> new AlertTile(), BlockHolder.ALERT_BLOCK).build(null));
 	
 	//Register ContainerTypes
+	//TODO Reduce ContainerTypes
     public static final RegistryObject<ContainerType<TankContainer>> TANK_CONTAINER = CONTAINERS.register("tank", () -> IForgeContainerType.create((windowId, inv, data) -> {
         BlockPos pos = data.readBlockPos();
         World world = inv.player.getEntityWorld();
@@ -109,9 +115,15 @@ public class RegistryHandler {
         World world = inv.player.getEntityWorld();
         return new ValveContainer(windowId, world, pos, inv, inv.player);
     }));
+    public static final RegistryObject<ContainerType<AlertContainer>> ALERT_CONTAINER = CONTAINERS.register("alert", () -> IForgeContainerType.create((windowId, inv, data) -> {
+        BlockPos pos = data.readBlockPos();
+        World world = inv.player.getEntityWorld();
+        return new AlertContainer(windowId, world, pos, inv, inv.player);
+    }));
     
 	//Register Items
 	public static final RegistryObject<Item> PROBE_ITEM = ITEMS.register("probe",() -> new ProbeItem());
+	public static final RegistryObject<Item> PLATE_ITEM = ITEMS.register("plate",() -> new Item(new Item.Properties().group(Juicy.itemGroup)));
 	public static final RegistryObject<Item> JUICE_BUCKET_ITEM = ITEMS.register("juice_bucket",() -> new BucketItem(()-> FluidHolder.MOBJUICE_STILL, new Item.Properties().group(ItemGroup.MISC)));
 	
 	//Register Blockitems
@@ -121,6 +133,7 @@ public class RegistryHandler {
 	public static final RegistryObject<Item> THERM_BLOCK_ITEM = ITEMS.register("thermostat",() -> ItemHelper.ItemfromBlock(BlockHolder.THERM_BLOCK));
 	public static final RegistryObject<Item> VALVE_BLOCK_ITEM = ITEMS.register("valve",() -> ItemHelper.ItemfromBlock(BlockHolder.VALVE_BLOCK));
 	public static final RegistryObject<Item> GENERATOR_BLOCK_ITEM = ITEMS.register("generator",() -> ItemHelper.ItemfromBlock(BlockHolder.GENERATOR_BLOCK));
+	public static final RegistryObject<Item> ALERT_BLOCK_ITEM = ITEMS.register("alert",() -> ItemHelper.ItemfromBlock(BlockHolder.ALERT_BLOCK));
 	
 	public static void registerall(){
 		FLUIDS.register(FMLJavaModLoadingContext.get().getModEventBus());

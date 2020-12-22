@@ -7,6 +7,7 @@ import javax.annotation.Nullable;
 
 import mod.juicy.Config;
 import mod.juicy.Juicy;
+import mod.juicy.block.BlockHolder;
 import mod.juicy.block.TankBlock;
 import mod.juicy.capability.BacteriaCapability;
 import mod.juicy.capability.IBacteriaCapability;
@@ -40,6 +41,7 @@ public class TankControllerTile extends TileEntity implements ITickableTileEntit
 		bacteria = new BacteriaCapability(Integer.MAX_VALUE);
 		juice = new JuiceTank(FluidAttributes.BUCKET_VOLUME, 500);
 		multiBlock = new Vector<BlockPos>();
+		alerts = new Vector<AlertTile>();
 		temperature = 20;
 	}
 
@@ -64,12 +66,29 @@ public class TankControllerTile extends TileEntity implements ITickableTileEntit
 			bacteria.setBact(newBact);
 			int drained = juice.removeFluid(Math.max((int) Math.round(newBact*Config.TANK_GPERB.get()), 1), false);
 			Juicy.LOGGER.info("Juice Drained: "+drained);
-			int added = juice.addGas(drained+(int) Math.round(Config.TANK_GBONUS.get()*Math.abs(newBact-juice.getFluidAmount())), false);
+			int bonus = (int) Math.round(Config.TANK_GBONUS.get()*Math.abs(newBact-juice.getFluidAmount()));
+			int added = juice.addGas(drained+bonus, false);
 			Juicy.LOGGER.info("Gas Added: "+added);
+			notifyAlertBlocks();
+			this.markDirty();
 			}
 		}
 	}
 
+	public void addAlert(AlertTile pAlert) {
+		this.alerts.add(pAlert);
+	}
+	
+	public void removeAlert(AlertTile pAlert) {
+		this.alerts.remove(pAlert);
+	}
+	
+	public void notifyAlertBlocks() {
+		if (!alerts.isEmpty()) {
+			alerts.forEach(alert->world.notifyNeighborsOfStateChange(alert.getPos(), BlockHolder.ALERT_BLOCK));
+		}
+	}
+	
 	public void setMultiBlock(Vector<BlockPos> tankPos) {
 		multiBlock = tankPos;
 	}
@@ -204,5 +223,12 @@ public class TankControllerTile extends TileEntity implements ITickableTileEntit
 	public void handleUpdateTag(BlockState state, CompoundNBT tag) {
 		super.read(state, tag);
 	}
+
+	public double getTemp() {
+		return temperature;
+	}
 	
+	public int getFlow() {
+		return juice.getIntake();
+	}
 }
