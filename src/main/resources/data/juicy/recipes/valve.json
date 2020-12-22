@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "###",
+    "FBF",
+    "OLO"
+  ],
+  "key": {
+    "#": {
+      "item": "juicy:plate"
+    },
+    "B": {
+      "item": "minecraft:iron_block"
+    },
+    "O": {
+      "item": "minecraft:obsidian"
+    },
+    "L": {
+      "item": "minecraft:sea_lantern"
+    },
+    "F": {
+      "item": "minecraft:glass_bottle"
+    }
+  },
+  "result": {
+    "item": "juicy:valve"
+  }
+}
