@@ -30,7 +30,6 @@ public class EventHandler {
 		if(!worldIn.isRemote)
 		for(int i=0;i<2;i++) {
 			BlockPos cPos = entity.getPosition().down(i);
-			Juicy.LOGGER.info("Current Position: "+cPos);
 			if(worldIn.getBlockState(cPos).getBlock() instanceof GutterBlock) {
 				if(worldIn.getTileEntity(cPos) != null)
 					((GutterTile) worldIn.getTileEntity(cPos)).addJuice(Config.GUTTER_MAXJPERMOB.get());
