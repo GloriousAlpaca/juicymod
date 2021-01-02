@@ -19,6 +19,7 @@ public class Config {
 	
 	//Generator Fields:
 	public static ForgeConfigSpec.IntValue GENERATOR_RFPERGAS;
+	public static ForgeConfigSpec.DoubleValue GENERATOR_BURNMULT;
 	public static ForgeConfigSpec.IntValue GENERATOR_ENERGYCAP;
 	public static ForgeConfigSpec.IntValue GENERATOR_GASCAP;
 	
@@ -65,6 +66,8 @@ public class Config {
 		SERVER_BUILDER.comment("Generator Settings").push(SUBCATEGORY_GENERATOR);
 		GENERATOR_RFPERGAS = SERVER_BUILDER.comment("RF per mb of Gas")
                 .defineInRange("rfPerGas", 10, 1, Integer.MAX_VALUE);
+		GENERATOR_BURNMULT = SERVER_BUILDER.comment("Gas Burn Multiplier")
+                .defineInRange("burnMult", 10., 1., Double.MAX_VALUE);
 		GENERATOR_ENERGYCAP = SERVER_BUILDER.comment("Energy Capacity of the Generator")
                 .defineInRange("energyCap", 20000, 1, Integer.MAX_VALUE);
 		GENERATOR_GASCAP = SERVER_BUILDER.comment("Gas Capacity of the Generator")
