@@ -35,9 +35,9 @@ af13ac6dd9d6710b5217be5b7e852ea686132062 data/juicy/loot_tables/blocks/valve.jso
 09416b73189828fd199f54c77ef4055e28b32e33 data/juicy/recipes/alert.json
 3f21e9240d4b6c587ed461961f459d06ecba40e9 data/juicy/recipes/generator.json
 f498b2d5e3c4bc43317873927f331ec9248dd3f4 data/juicy/recipes/juicegutter.json
-60c3ec1ae48446fe4d1993662e9c28941ecadfb3 data/juicy/recipes/plate.json
+b61d79f385030d927d7d33b880cc73638b8c9d83 data/juicy/recipes/plate.json
 2268fd408ea4e52cad9b69f26dc29f9eb3de62c4 data/juicy/recipes/probe.json
-b170eb0ca9a0a386ad4cc97332106847bd5931d4 data/juicy/recipes/tank.json
+1135ba2863fcacddb5a738dfb8ec7fdaf3766ecf data/juicy/recipes/tank.json
 fcd0baa60148fb4f55e30fdbf514fbd2c04cc50d data/juicy/recipes/tank_controller.json
 fddba353f9ae570dea68db80c09302af9c04c5f4 data/juicy/recipes/thermostat.json
 abbd5d84456b2120c3643c4c835ce70d8a594b86 data/juicy/recipes/valve.json

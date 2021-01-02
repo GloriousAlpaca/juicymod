@@ -1,9 +1,9 @@
 {
   "type": "minecraft:crafting_shaped",
   "pattern": [
-    "O#D",
+    "O#O",
     "#B#",
-    "D#O"
+    "O#O"
   ],
   "key": {
     "#": {
@@ -11,9 +11,6 @@
     },
     "B": {
       "item": "minecraft:bucket"
-    },
-    "D": {
-      "item": "minecraft:diamond"
     },
     "O": {
       "item": "minecraft:obsidian"
