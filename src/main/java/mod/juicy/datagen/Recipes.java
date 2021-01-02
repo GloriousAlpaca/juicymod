@@ -19,7 +19,7 @@ public class Recipes extends RecipeProvider {
 
 	@Override
 	protected void registerRecipes(Consumer<IFinishedRecipe> consumer) {
-		ShapedRecipeBuilder.shapedRecipe(ItemHolder.PLATE, 1)
+		ShapedRecipeBuilder.shapedRecipe(ItemHolder.PLATE, 16)
 		.key('#', Items.DRIED_KELP).key('I', Items.IRON_INGOT).key('P', Items.PRISMARINE_SHARD)
 		.patternLine("IPI")
 		.patternLine("P#P")

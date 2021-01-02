@@ -47,7 +47,7 @@ public class GeneratorTile extends TileEntity implements ITickableTileEntity{
 		if(!world.isRemote)
 		{
 			if(!tank.isEmpty()) {
-				int gasPerTick = 10*Math.round((float)tank.getFluidAmount()/(float)tank.getCapacity());
+				int gasPerTick = Math.round(10f*(float)tank.getFluidAmount()/(float)tank.getCapacity());
 				int drained = tank.drain(gasPerTick, FluidAction.SIMULATE).getAmount();
 				int generated = energy.receiveEnergy(Config.GENERATOR_RFPERGAS.get()*drained, true);
 				if(generated>0) {

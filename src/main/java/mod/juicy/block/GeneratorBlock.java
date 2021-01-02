@@ -32,7 +32,7 @@ import net.minecraftforge.fml.network.NetworkHooks;
 public class GeneratorBlock extends Block{
 
 	public GeneratorBlock() {
-		super(AbstractBlock.Properties.create(Material.IRON).hardnessAndResistance(1.5f, 1000f).harvestLevel(2).harvestTool(ToolType.PICKAXE).setRequiresTool().sound(SoundType.METAL));
+		super(AbstractBlock.Properties.create(Material.IRON).hardnessAndResistance(1.5f, 1000f).harvestLevel(1).harvestTool(ToolType.PICKAXE).setRequiresTool().sound(SoundType.METAL));
 	}
 
 	@Override
