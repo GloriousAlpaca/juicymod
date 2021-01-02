@@ -55,10 +55,10 @@ public class Recipes extends RecipeProvider {
 		.addCriterion("has_plate", hasItem(ItemHolder.PLATE))
 		.build(consumer);
 		ShapedRecipeBuilder.shapedRecipe(BlockHolder.TANK_BLOCK, 1)
-		.key('#', ItemHolder.PLATE).key('B', Items.BUCKET).key('D', Items.DIAMOND).key('O', Items.OBSIDIAN)
-		.patternLine("O#D")
+		.key('#', ItemHolder.PLATE).key('B', Items.BUCKET).key('O', Items.OBSIDIAN)
+		.patternLine("O#O")
 		.patternLine("#B#")
-		.patternLine("D#O")
+		.patternLine("O#O")
 		.addCriterion("has_plate", hasItem(ItemHolder.PLATE))
 		.build(consumer);
 		ShapedRecipeBuilder.shapedRecipe(BlockHolder.TANK_CONTROLLER_BLOCK, 1)
