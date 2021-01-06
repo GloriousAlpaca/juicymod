@@ -96,39 +96,9 @@ public class TankSlaveTile extends TileEntity {
 		return nbt;
 	}
 
-	//UPDATE PACKET--------------------------------------------------------------------
-	/**
-	 * Retrieves packet to send to the client whenever this Tile Entity is resynced
-	 * via World.notifyBlockUpdate. For modded TE's, this packet comes back to you
-	 * clientside in {@link #onDataPacket}
-	 */
 	@Override
-	@Nullable
-	public SUpdateTileEntityPacket getUpdatePacket() {
-		return new SUpdateTileEntityPacket(this.getPos(), 1, this.getUpdateTag());
-	}
-	
-	@Override
-	public void onDataPacket(net.minecraft.network.NetworkManager net, net.minecraft.network.play.server.SUpdateTileEntityPacket pkt){
-		super.onDataPacket(net, pkt);
-		this.handleUpdateTag(this.getWorld().getBlockState(pkt.getPos()),pkt.getNbtCompound());
-	}
-	
-	
-	//UPDATE TAG--------------------------------------------------------------------
-	/**
-	 * Get an NBT compound to sync to the client with SPacketChunkData, used for
-	 * initial loading of the chunk or when many blocks change at once. This
-	 * compound comes back to you clientside in {@link handleUpdateTag}
-	 */
-	@Override
-	public CompoundNBT getUpdateTag() {
-		CompoundNBT nbt = super.getUpdateTag();
-		if (controller != null) {
-			int[] controllerCoords = { controller.getX(), controller.getY(), controller.getZ() };
-			nbt.putIntArray("controller", controllerCoords);
-		}
-		return nbt;
+	public void handleUpdateTag(BlockState state, CompoundNBT tag) {
+		super.read(state, tag);
 	}
 	
 }

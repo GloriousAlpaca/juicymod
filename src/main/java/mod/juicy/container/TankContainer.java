@@ -19,20 +19,14 @@ import net.minecraftforge.items.wrapper.InvWrapper;
 
 public class TankContainer extends Container{
 	private TileEntity tile;
-	private BlockPos controller = null;
+	private BlockPos pos = null;
 	private PlayerEntity playerEntity;
     private IItemHandler playerInventory;
     
 	public TankContainer(int windowId, World world, BlockPos pos, PlayerInventory playerInventory, PlayerEntity player) {
 		super(ContainerHolder.TANK_CONTAINER, windowId);
 		tile = world.getTileEntity(pos);
-		if(tile != null)
-		if (tile instanceof TankSlaveTile) {
-			if (((TankSlaveTile) tile).getController() != null)
-				controller = ((TankSlaveTile) tile).getController();
-		} else if (tile instanceof TankControllerTile) {
-			controller = tile.getPos();
-		}
+		this.pos = pos;
 		this.playerEntity = player;
         this.playerInventory = new InvWrapper(playerInventory);
         //Setup Player Inventory Slots
@@ -69,7 +63,7 @@ public class TankContainer extends Container{
 	}
 
 	public BlockPos getPos() {
-		return this.controller;
+		return this.pos;
 	}
 	
 }
