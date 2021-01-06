@@ -37,6 +37,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidAttributes;
@@ -64,7 +65,7 @@ public class RegistryHandler {
 	public static final ResourceLocation MOBGAS_STILL_RL = new ResourceLocation(Juicy.MODID,"block/mobgas_still");
 	public static final ResourceLocation MOBGAS_FLOWING_RL = new ResourceLocation(Juicy.MODID,"block/mobgas_flowing");
 	public static final ResourceLocation MOBGAS_OVERLAY_RL = new ResourceLocation(Juicy.MODID,"block/mobgas_overlay");
-	public static final ForgeFlowingFluid.Properties MOBJUICE_PROPERTIES = new ForgeFlowingFluid.Properties(()-> FluidHolder.MOBJUICE_STILL, ()-> FluidHolder.MOBJUICE_FLOWING, FluidAttributes.builder(MOBJUICE_STILL_RL, MOBJUICE_FLOWING_RL).density(1000).luminosity(10).overlay(MOBJUICE_OVERLAY_RL)).block(()->FluidHolder.MOBJUICE_BLOCK).bucket(()->ItemHolder.JUICE_BUCKET);
+	public static final ForgeFlowingFluid.Properties MOBJUICE_PROPERTIES = new ForgeFlowingFluid.Properties(()-> FluidHolder.MOBJUICE_STILL, ()-> FluidHolder.MOBJUICE_FLOWING, FluidAttributes.builder(MOBJUICE_STILL_RL, MOBJUICE_FLOWING_RL).density(1000).luminosity(10).overlay(MOBJUICE_OVERLAY_RL).sound(SoundEvents.ITEM_BUCKET_FILL)).block(()->FluidHolder.MOBJUICE_BLOCK).bucket(()->ItemHolder.JUICE_BUCKET);
 	public static final ForgeFlowingFluid.Properties MOBGAS_PROPERTIES = new ForgeFlowingFluid.Properties(()-> FluidHolder.MOBGAS_STILL, ()-> FluidHolder.MOBGAS_FLOWING, FluidAttributes.builder(MOBGAS_STILL_RL, MOBGAS_FLOWING_RL).density(5).viscosity(1).luminosity(10).overlay(MOBGAS_OVERLAY_RL).gaseous()).block(()->FluidHolder.MOBGAS_BLOCK);
 	
 	//Register Fluids

@@ -22,10 +22,15 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.inventory.container.Container;
 import net.minecraft.inventory.container.INamedContainerProvider;
+import net.minecraft.item.BlockItem;
+import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
+import net.minecraft.util.SoundCategory;
+import net.minecraft.util.SoundEvent;
+import net.minecraft.util.SoundEvents;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.text.ITextComponent;
@@ -35,6 +40,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.ToolType;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidUtil;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fml.network.NetworkHooks;
 
 public class TankBlock extends Block {
@@ -86,7 +92,6 @@ public class TankBlock extends Block {
 				if (tile instanceof TankControllerTile) {
 					((TankControllerTile) tile).renounceController();
 				} else {
-					// TODO Fix Multiblock structure
 					BlockPos controllerPos = ((TankSlaveTile) tile).getController();
 					if (controllerPos != null) {
 						TankControllerTile controller = (TankControllerTile) worldIn.getTileEntity(controllerPos);
@@ -117,16 +122,21 @@ public class TankBlock extends Block {
 	@Override
 	public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player,
 			Hand handIn, BlockRayTraceResult hit) {
-		// TODO Fix Bucket Interaction
-		if (FluidUtil.interactWithFluidHandler(player, handIn, worldIn, hit.getPos(), hit.getFace())) {
-			
-			if(!worldIn.isRemote)
+		if(worldIn.getTileEntity(pos) == null) {
+			return ActionResultType.PASS;
+		}
+		else if(worldIn.isRemote()) {
+	        if(player.isCrouching())
+	        	return ActionResultType.PASS;
+	        else
+	        	return ActionResultType.SUCCESS;
+		}
+		else if (FluidUtil.interactWithFluidHandler(player, handIn, worldIn, hit.getPos(), hit.getFace())) {
 			JuicyHelper.getController(pos, worldIn).ifPresent(controller -> controller.markDirty());
-			return ActionResultType.func_233537_a_(worldIn.isRemote);
+			return ActionResultType.CONSUME;
 			
-		} else if (player.getHeldItem(handIn).getCapability(BacteriaCapability.BACT_CAPABILITY).isPresent() && !player.isCrouching()) {
+		} else if (player.getHeldItem(handIn).getCapability(BacteriaCapability.BACT_CAPABILITY).isPresent()) {
 			
-			if(!worldIn.isRemote) {
 			LazyOptional<IBacteriaCapability> bacttile = worldIn.getTileEntity(pos).getCapability(BacteriaCapability.BACT_CAPABILITY);
 			bacttile.ifPresent(cap -> {
 				LazyOptional<IBacteriaCapability> playercap = player.getHeldItemMainhand()
@@ -135,12 +145,9 @@ public class TankBlock extends Block {
 				cap.setBact(drained+cap.getBact());
 			});
 			JuicyHelper.getController(pos, worldIn).ifPresent(controller -> controller.markDirty());
-			}
-			return ActionResultType.func_233537_a_(worldIn.isRemote);
+			return ActionResultType.CONSUME;
 			
 		} else if (!player.isCrouching()) {
-			
-			if (!worldIn.isRemote) {
 				TileEntity tile = worldIn.getTileEntity(pos);
 				if (tile != null)
 					if(JuicyHelper.getController(pos, worldIn).isPresent()) {
@@ -157,10 +164,9 @@ public class TankBlock extends Block {
 					};
 					NetworkHooks.openGui((ServerPlayerEntity) player, containerProvider, tile.getPos());
 				}
-			}
 			return ActionResultType.SUCCESS;
 	}
-		return ActionResultType.PASS;
+		return ActionResultType.FAIL;
 	}
 	
 }
