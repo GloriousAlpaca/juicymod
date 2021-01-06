@@ -21,9 +21,6 @@ public class TankControllerBlock extends TankBlock{
 		return new TankControllerTile();
 	}
 	
-	/**
-	    * Called by ItemBlocks after a block is set in the world, to allow post-place logic
-	    */
 	@Override
 	public void onBlockPlacedBy(World worldIn, BlockPos pos, BlockState state, @Nullable LivingEntity placer,ItemStack stack) 
 	{
@@ -32,7 +29,12 @@ public class TankControllerBlock extends TankBlock{
 			TankControllerTile tile = ((TankControllerTile) worldIn.getTileEntity(pos));
 			tile.setMultiBlock(marked);
 			tile.announceController(marked);
+			tile.updateCapacity();
 			tile.markDirty();
+			marked.forEach(tankPos->{
+				BlockState tankState = worldIn.getBlockState(tankPos);
+				worldIn.notifyBlockUpdate(tankPos, tankState, tankState, 1);
+			});
 		}
 	}
 	
