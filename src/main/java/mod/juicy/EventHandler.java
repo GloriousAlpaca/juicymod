@@ -28,7 +28,7 @@ public class EventHandler {
 		LivingEntity entity = event.getEntityLiving();
 		World worldIn = entity.getEntityWorld();
 		if(!worldIn.isRemote)
-		for(int i=0;i<2;i++) {
+		for(int i=0;i<Config.GUTTER_HEIGHT.get();i++) {
 			BlockPos cPos = entity.getPosition().down(i);
 			if(worldIn.getBlockState(cPos).getBlock() instanceof GutterBlock) {
 				if(worldIn.getTileEntity(cPos) != null)

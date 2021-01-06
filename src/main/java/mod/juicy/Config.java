@@ -26,6 +26,7 @@ public class Config {
 	//Gutter Fields:
 	public static ForgeConfigSpec.IntValue GUTTER_MAXJPERMOB;
 	public static ForgeConfigSpec.IntValue GUTTER_JUICECAP;
+	public static ForgeConfigSpec.IntValue GUTTER_HEIGHT;
 	
 	public static ForgeConfigSpec SERVER_CONFIG;
 	  
@@ -81,7 +82,10 @@ public class Config {
                 .defineInRange("juicePerMob", 10, 1, Integer.MAX_VALUE);
 		GUTTER_JUICECAP = SERVER_BUILDER.comment("Juice Capacity of the Juicegutter")
                 .defineInRange("juiceCap", 1000, 1, Integer.MAX_VALUE);
+		GUTTER_HEIGHT = SERVER_BUILDER.comment("Maximal Height of Death to collect Juice")
+                .defineInRange("collectHeight", 1000, 1, Integer.MAX_VALUE);
 		SERVER_BUILDER.pop();
+		
 	}
 	
 }
