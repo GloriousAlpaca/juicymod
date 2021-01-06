@@ -10,7 +10,6 @@ public class LanguageGerman extends LanguageProvider{
 
 	public LanguageGerman(DataGenerator gen) {
 		super(gen, Juicy.MODID, "de_de");
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
