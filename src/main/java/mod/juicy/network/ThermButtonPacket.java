@@ -40,6 +40,8 @@ public class ThermButtonPacket {
         		if(tile instanceof ThermTile) {
         		((ThermTile) tile).setHigh(high);
         		((ThermTile) tile).setLow(low);
+        		((ThermTile) tile).setTemp(serverWorld.isBlockPowered(pos) ? high : low);
+        		((ThermTile) tile).markDirty();
         	}
         });
         return true;

@@ -2,6 +2,7 @@ package mod.juicy.network;
 
 import java.util.function.Supplier;
 
+import mod.juicy.tile.ThermTile;
 import mod.juicy.tile.ValveTile;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;
@@ -41,6 +42,8 @@ public class ValveButtonPacket {
         		if(tile instanceof ValveTile) {
         		((ValveTile) tile).setHigh(high);
         		((ValveTile) tile).setLow(low);
+        		((ValveTile) tile).setFlow(serverWorld.isBlockPowered(pos) ? high : low);
+        		((ValveTile) tile).markDirty();
         	}
         });
         return true;
