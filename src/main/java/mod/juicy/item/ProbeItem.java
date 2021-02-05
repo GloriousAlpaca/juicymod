@@ -86,8 +86,10 @@ public class ProbeItem extends Item{
 	
 	@Override
 	public void readShareTag(ItemStack stack, CompoundNBT nbt) {
+		if(nbt != null) {
 		super.readShareTag(stack, nbt);
 		stack.getCapability(BacteriaCapability.BACT_CAPABILITY, null).ifPresent(cap->BacteriaCapability.BACT_CAPABILITY.readNBT(cap, null, nbt.get("bacteria")));
+		}
 	}
 	
 }
