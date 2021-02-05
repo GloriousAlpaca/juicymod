@@ -27,11 +27,12 @@ displayURL="https://github.com/GloriousAlpaca/juicymod" #optional
 # A file name (in the root of the mod JAR) containing a logo for display
 logoFile="juicy.png" #optional
 # A text field displayed in the mod UI
-credits="GloriousAlpaca" #optional
+credits="" #optional
 # A text field displayed in the mod UI
-#authors="" #optional
+#authors="GloriousAlpaca" #optional
 # The description text for the mod (multi line!) (#mandatory)
 description='''
+Use your Mobfarm to make Energy!
 '''
 # A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.
 [[dependencies.juicy]] #optional

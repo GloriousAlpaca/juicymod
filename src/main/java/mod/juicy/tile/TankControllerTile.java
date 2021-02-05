@@ -64,9 +64,11 @@ public class TankControllerTile extends TileEntity implements ITickableTileEntit
 			bacteria.setLimit((int) Math.round(juice.getFluidAmount()*Config.TANK_BPERJ.get()));
 			double newBact = bacteria.growBact(temperature, juice.getFluidAmount());
 			bacteria.setBact(newBact);
+			//TODO Remove Rounding
 			int drained = juice.removeFluid(Math.max((int) Math.round(newBact*Config.TANK_GPERB.get()), 1), false);
 			int bonus = (int) Math.round(Config.TANK_GBONUS.get()*Math.abs(newBact-juice.getFluidAmount()));
 			juice.addGas(drained+bonus, false);
+			//TODO Add more notification Conditions
 			this.notifyAlertBlocks();
 			this.markDirty();
 			}

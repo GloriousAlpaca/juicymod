@@ -1,10 +1,15 @@
 package mod.juicy.tile;
 
+import com.mojang.datafixers.functions.PointFreeRule.OrElse;
+
 import mod.juicy.Config;
+import mod.juicy.block.TankBlock;
 import mod.juicy.fluid.FluidHolder;
+import mod.juicy.util.JuicyHelper;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
+import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
@@ -55,12 +60,23 @@ public class GeneratorTile extends TileEntity implements ITickableTileEntity{
 					energy.receiveEnergy(generated, false);
 				}
 				rfLastTick = generated;
+				this.pushEnergy(tank.getCapacity());
 			}
 		}
 	}
 	
 	public int getLastGenerated() {
 		return rfLastTick;
+	}
+	
+	public void pushEnergy(int amount) {
+		for (int i = 0; i < 6; i++) {
+			BlockPos n = this.getPos().add(JuicyHelper.neighbours[i]);
+			if(this.world.getTileEntity(n) != null) {
+			int pushed = this.world.getTileEntity(n).getCapability(CapabilityEnergy.ENERGY).map((eStore)->eStore.receiveEnergy(energy.extractEnergy(amount, true), false)).orElse(0);
+			energy.extractEnergy(pushed, false);
+			}
+		}
 	}
 	
 }
